@@ -1,0 +1,4 @@
+Morphine
+========
+
+Extended JavaScript collections
