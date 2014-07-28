@@ -1,13 +1,22 @@
 
-// TODO: Вынести билдер в отдельный файл
+
+// TODO: Сделать установку типа для коллекции
+
 // TODO: Доработать билд объектов. На том уровне вложенности, где на пути билдера будет встречаться знак '$' или число - должен генерироваться массив и элементы должны добавляться соответственно через push.
 // TODO: Возможно стоит помечать текущий уровень объекта как 'Object' или 'Array'. И для каждого типа объекта проверять верно используются его API или нет. (Напрмер для Object нельзя использовать push/pop, а для Array - add/remove)
 // TODO: Merge сейчас работает некорректно. Если встречаются объекты с одинаковыми названиями, то старый объект заменяется новым без проверки вложенных свойств.
+// TODO: Реализовать корректный метод stringify для коллекции
+// TODO: Вынести билдер в отдельный файл
+// TODO: Добавить тесты
+// TODO: Добавить Gulp для сборки
+// TODO: Оформить библиотеку как bower-пакет
 
 /**
  * constructor
  **/
 function Morphine() {
+    this.__type__ = "Object";
+    //setType = setType.bind(this);
     return this;
 }
 
@@ -18,6 +27,11 @@ Morphine.prototype.push = Array.prototype.push;
 Morphine.prototype.pop = Array.prototype.pop;
 Morphine.prototype.join = Array.prototype.join;
 Morphine.prototype.splice = Array.prototype.splice;
+
+
+/*function setType (type) {
+    this.__type__ = type;
+}*/
 
 /**
  * Возвращает объект из источника
@@ -142,6 +156,22 @@ Morphine.prototype.isUndefined = function (key) {
  **/
 Morphine.prototype.isNull = function (key) {
     return this[key] === null;
+};
+
+/**
+ * Проверит принадлежность коллекции к типу объекта
+ * @return {Boolean} Результат проверки. true - коллекция является объектом == null, false - коллекция не является объектом
+ **/
+Morphine.prototype.isObject = function () {
+    return (this.isUndefined('__type__') || this.__type__ === "Object");
+};
+
+/**
+ * Проверит принадлежность коллекции к типу массива
+ * @return {Boolean} Результат проверки. true - коллекция является массивом == null, false - коллекция не является массивом
+ **/
+Morphine.prototype.isObject = function () {
+    return this.__type__ === "Array";
 };
 
 /**
