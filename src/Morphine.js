@@ -1,4 +1,9 @@
 
+// TODO: Вынести билдер в отдельный файл
+// TODO: Доработать билд объектов. На том уровне вложенности, где на пути билдера будет встречаться знак '$' или число - должен генерироваться массив и элементы должны добавляться соответственно через push.
+// TODO: Возможно стоит помечать текущий уровень объекта как 'Object' или 'Array'. И для каждого типа объекта проверять верно используются его API или нет. (Напрмер для Object нельзя использовать push/pop, а для Array - add/remove)
+// TODO: Merge сейчас работает некорректно. Если встречаются объекты с одинаковыми названиями, то старый объект заменяется новым без проверки вложенных свойств.
+
 /**
  * constructor
  **/
@@ -55,7 +60,35 @@ Morphine.prototype.remove = function (key) {
 };
 
 /**
- * Метод выстроит объект по структуре указанной в path
+ * Проверит наличие свойства key в текущем объекте
+ * @param {String} key ключ элемента
+ * @return {Boolean} Результат проверки присутствия поля. true - присутствует, false - отсутствует.
+ **/
+Morphine.prototype.has = function (key) {
+    return this.hasOwnProperty(key);
+};
+
+/**
+ * Проверит свойство объекта на undefined
+ * @param {String} key ключ элемента
+ * @return {Boolean} Результат проверки. true - свойство == undefined, false - свойство !== undefined.
+ **/
+Morphine.prototype.isUndefined = function (key) {
+    return typeof this[key] === 'undefined';
+};
+
+/**
+ * Проверит свойство объекта на null
+ * @param {String} key ключ элемента
+ * @return {Boolean} Результат проверки. true - свойство == null, false - свойство !== null.
+ **/
+Morphine.prototype.isNull = function (key) {
+    return this[key] === null;
+};
+
+/**
+ * Метод выстроит объект по структуре указанной в path. В последний
+ * элемент path поместит значение value.
  * @param {String} path Задает структуру объекта для построения
  * @param {Any} value Значение последнего элемента в path
  **/
