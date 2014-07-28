@@ -21,8 +21,8 @@ Morphine.prototype.splice = Array.prototype.splice;
 
 /**
  * Возвращает объект из источника
- * @param pathArray {Array} массив содержащий путь до целевого элемента
- * @param source {Object} Объект-источник
+ * @param {Array} pathArray  массив содержащий путь до целевого элемента
+ * @param {Object} source Объект-источник
  **/
 function getter (pathArray, source) {
     var index = pathArray.shift();
@@ -31,7 +31,65 @@ function getter (pathArray, source) {
         return source[index];
     }
     return getter(pathArray, source[index]);
-};
+}
+
+/**
+ * @private
+ * Метод выстроит объект по структуре указанной в path
+ * @param {String} path Задает структуру объекта для построения
+ * @param {Any} value Значение последнего элемента в path
+ **/
+function BuildObject (path, value) {
+    var props = path.split('.'),
+        iter = this, base = iter;
+
+    for (var i = 0; i < props.length; i++) {
+        if (i == (props.length-1)) {
+            iter[props[i]] = value;
+        } else {
+            iter[props[i]] = (typeof iter[props[i]] !== 'undefined') ? iter[props[i]] : new Morphine();
+            iter = iter[props[i]];
+        }
+    }
+    return base;
+}
+
+/**
+ * @private
+ * Мерджит поля объекта dst с полями объекта src,
+ * если они являются примитивными типами.
+ * @param {Morphine} dst Целевой объект для мерджа
+ * @param {Morphine} src Исходный объект для мерджа
+ */
+function MergeObjects (dst, src) {
+    for (var key in src) {
+        if (!src.has(key) || src.isUndefined(key) || src.isNull(key)) continue;
+
+        if (checkType(src[key].constructor)) {
+            dst[key] = src[key];
+        } else {
+            if (!dst[key]) { dst[key] = {}; }
+            MergeObjects(dst[key], src[key]);
+        }
+    }
+    return dst;
+}
+
+/**
+ * @private
+ * Проверяет соответствие фактического типа real примитивным типам.
+ * Если задан ожидаемый тип expect, то проверяется соответствие только с ним.
+ */
+function checkType (real, expect) {
+    expect = expect ? [expect] : [Boolean, String, Number];
+    var ln = expect.length;
+    for (var i = 0; i < ln; i++) {
+        if (expect[i] === real) {
+            return true;
+        }
+    }
+    return false;
+}
 
 /**
  * Метод вернет целевой объект по указанному свойству
@@ -93,17 +151,8 @@ Morphine.prototype.isNull = function (key) {
  * @param {Any} value Значение последнего элемента в path
  **/
 Morphine.prototype.build = function (path, value) {
-    var props = path.split('.'),
-        valueItemName = props[props.length-1],
-        iter = this, base = iter;
-
-    for (var i = 0; i < props.length; i++) {
-        if (i == (props.length-1)) {
-            iter[props[i]] = value;
-        } else {
-            iter[props[i]] = new Morphine();
-            iter = iter[props[i]];
-        }
-    }
-    return base;
+    var newObject = BuildObject.bind(this)(path, value);
+    //MergeObjects.bind(this)(this, newObject);
+    //return this;
+    return newObject;
 };
