@@ -2,8 +2,9 @@
 
 // TODO: Сделать установку типа для коллекции
 
+// TODO: Возможно стоит помечать текущий уровень объекта как 'Object' или 'Array'.
+// TODO: Для каждого типа объекта проверять верно используются его API или нет. (Напрмер для Object нельзя использовать push/pop, а для Array - add/remove)
 // TODO: Доработать билд объектов. На том уровне вложенности, где на пути билдера будет встречаться знак '$' или число - должен генерироваться массив и элементы должны добавляться соответственно через push.
-// TODO: Возможно стоит помечать текущий уровень объекта как 'Object' или 'Array'. И для каждого типа объекта проверять верно используются его API или нет. (Напрмер для Object нельзя использовать push/pop, а для Array - add/remove)
 // TODO: Merge сейчас работает некорректно. Если встречаются объекты с одинаковыми названиями, то старый объект заменяется новым без проверки вложенных свойств.
 // TODO: Реализовать корректный метод stringify для коллекции
 // TODO: Вынести билдер в отдельный файл
@@ -11,27 +12,23 @@
 // TODO: Добавить Gulp для сборки
 // TODO: Оформить библиотеку как bower-пакет
 
+
+function MorphineArray() {}
+MorphineArray.prototype = new Array();
+
 /**
  * constructor
  **/
-function Morphine() {
-    this.__type__ = "Object";
-    //setType = setType.bind(this);
-    return this;
-}
+function Morphine() {}
 
 /**
  * Подключаем API массивов
  **/
-Morphine.prototype.push = Array.prototype.push;
+/*Morphine.prototype.push = Array.prototype.push;
 Morphine.prototype.pop = Array.prototype.pop;
 Morphine.prototype.join = Array.prototype.join;
-Morphine.prototype.splice = Array.prototype.splice;
+Morphine.prototype.splice = Array.prototype.splice;*/
 
-
-/*function setType (type) {
-    this.__type__ = type;
-}*/
 
 /**
  * Возвращает объект из источника
@@ -55,14 +52,35 @@ function getter (pathArray, source) {
  **/
 function BuildObject (path, value) {
     var props = path.split('.'),
-        iter = this, base = iter;
+        iter = this, base = iter,
+        intRegexp = /^[0-9]$/;
 
     for (var i = 0; i < props.length; i++) {
         if (i == (props.length-1)) {
             iter[props[i]] = value;
         } else {
-            iter[props[i]] = (typeof iter[props[i]] !== 'undefined') ? iter[props[i]] : new Morphine();
-            iter = iter[props[i]];
+            if (intRegexp.test(props[i+1]) || props[i+1] === '$') {
+                // Если следующий элемент - число или текущий обозначен как коллекция, то на текущем уровне нужно создать массив
+                iter[props[i]] = (typeof iter[props[i]] !== 'undefined') ? iter[props[i]] : new MorphineArray();
+            } else {
+                if (intRegexp.test(props[i])) {
+                    if (typeof iter[props[i]] === 'undefined') {
+                        // TODO: Неустоявшееся поведение: Если элемент еще не существует - ничего с ним не делаем, т.к. не ясно что с ним делать
+                    } else {
+                        // TODO: Неустоявшееся поведение: Если элемент уже существует - ничего с ним не делаем, т.к. не ясно что с ним делать
+                    }
+                } else if (props[i] === '$') {
+                    iter.push(new Morphine());
+                } else {
+                    iter[props[i]] = (typeof iter[props[i]] !== 'undefined') ? iter[props[i]] : new Morphine();
+                }
+            }
+
+            if (props[i] === '$') {
+                iter = iter[iter.length-1];
+            } else {
+                iter = iter[props[i]];
+            }
         }
     }
     return base;
@@ -162,17 +180,17 @@ Morphine.prototype.isNull = function (key) {
  * Проверит принадлежность коллекции к типу объекта
  * @return {Boolean} Результат проверки. true - коллекция является объектом == null, false - коллекция не является объектом
  **/
-Morphine.prototype.isObject = function () {
+/*Morphine.prototype.isObject = function () {
     return (this.isUndefined('__type__') || this.__type__ === "Object");
-};
+};*/
 
 /**
  * Проверит принадлежность коллекции к типу массива
  * @return {Boolean} Результат проверки. true - коллекция является массивом == null, false - коллекция не является массивом
  **/
-Morphine.prototype.isObject = function () {
+/*Morphine.prototype.isArray = function () {
     return this.__type__ === "Array";
-};
+};*/
 
 /**
  * Метод выстроит объект по структуре указанной в path. В последний
