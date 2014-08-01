@@ -1,17 +1,14 @@
 
 
-// TODO: Сделать установку типа для коллекции
 
-// TODO: Возможно стоит помечать текущий уровень объекта как 'Object' или 'Array'.
-// TODO: Для каждого типа объекта проверять верно используются его API или нет. (Напрмер для Object нельзя использовать push/pop, а для Array - add/remove)
-// TODO: Доработать билд объектов. На том уровне вложенности, где на пути билдера будет встречаться знак '$' или число - должен генерироваться массив и элементы должны добавляться соответственно через push.
 // TODO: Merge сейчас работает некорректно. Если встречаются объекты с одинаковыми названиями, то старый объект заменяется новым без проверки вложенных свойств.
 // TODO: Реализовать корректный метод stringify для коллекции
+// TODO: Если при создании Morphine-объекта ему в качестве параметра передается массив или объект - нужно преобразовать его в Morphine-сущность
 // TODO: Вынести билдер в отдельный файл
 // TODO: Добавить тесты
 // TODO: Добавить Gulp для сборки
 // TODO: Оформить библиотеку как bower-пакет
-
+// TODO: Реализовать listeners на Morphine-объектах
 
 function MorphineArray() {}
 MorphineArray.prototype = new Array();
@@ -200,17 +197,17 @@ Morphine.prototype.isNull = function (key) {
  * Проверит принадлежность коллекции к типу объекта
  * @return {Boolean} Результат проверки. true - коллекция является объектом == null, false - коллекция не является объектом
  **/
-/*Morphine.prototype.isObject = function () {
-    return (this.isUndefined('__type__') || this.__type__ === "Object");
-};*/
+Morphine.prototype.isObject = function () {
+    return this.constructor === Morphine;   // (this.isUndefined('__type__') || this.__type__ === "Object");
+};
 
 /**
  * Проверит принадлежность коллекции к типу массива
  * @return {Boolean} Результат проверки. true - коллекция является массивом == null, false - коллекция не является массивом
  **/
-/*Morphine.prototype.isArray = function () {
-    return this.__type__ === "Array";
-};*/
+Morphine.prototype.isArray = function () {  // TODO: Не доступен для MorphineArray
+    return this.constructor === MorphineArray;  //this.__type__ === "Array";
+};
 
 /**
  * Метод выстроит объект по структуре указанной в path. В последний
@@ -223,4 +220,8 @@ Morphine.prototype.build = function (path, value) {
     //MergeObjects.bind(this)(this, newObject);
     //return this;
     return newObject;
+};
+
+Morphine.prototype.merge = function (newObject) {
+    return MergeObjects.bind(this)(this, newObject);
 };
