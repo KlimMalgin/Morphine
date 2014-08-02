@@ -274,6 +274,18 @@ function ConvertArray (obj, morph) {
  */
 function Common() {}
 
+/***
+ *
+ * @param key
+ * @returns {boolean}
+ */
+Common.prototype.create = function (obj) {
+    if (obj) {
+        this.build(obj);
+    }
+    return this;
+};
+
 /**
  * Проверит наличие свойства key в текущем объекте
  * @param {String} key ключ элемента
@@ -335,8 +347,8 @@ Common.prototype.get = function (property) {
  * @return {Morphine} Получившийся объект
  **/
 Common.prototype.set = function (path, value) {
-    var newObject = BuildObject.bind(this)(path, (typeof value !== 'undefined') ? value : {});
-    return newObject;
+    BuildObject.bind(this)(path, (typeof value !== 'undefined') ? value : {});
+    return this;
 };
 
 /**
@@ -362,8 +374,8 @@ Common.prototype.remove = function (key) {
  * @param {String} obj Объект для преобразования
  **/
 Common.prototype.build = function (obj) {
-    var newObject = converter.bind(this)(obj || {});
-    return newObject;
+    converter.bind(this)(obj || {});
+    return this;
 };
 
 /**
