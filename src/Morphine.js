@@ -3,8 +3,9 @@
 /***
  * @constructor
  */
-function MorphineArray() {}
+function MorphineArray() { this.constructor = MorphineArray; }
 MorphineArray.prototype = new Array();
+MorphineArray.prototype = new MorphineArray();
 
 /***
  * @constructor

@@ -39,8 +39,9 @@ function ObjectToString (obj) {
 
 function ArrayToString (obj) {
     var start = "[", end = "]",
-        result = [], item = "";
-    for (var key in obj) {
+        result = [], item = "",
+        ln = obj.length;
+    for (var key = 0; key < ln; key++) {
         if (!obj.has(key) || key === 'length') continue;
         if (obj[key].isObject && obj[key].isObject()) {
             item += ObjectToString(obj[key]);
