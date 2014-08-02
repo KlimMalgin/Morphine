@@ -5,26 +5,16 @@ var Morphine = (function (factory) {
 
 
 
-// TODO: Если при создании Morphine-объекта ему в качестве параметра передается массив или объект - нужно преобразовать его в Morphine-сущность
-// TODO: Добавить тесты
-// TODO: Добавить метод create
-// TODO: Добавить метод config
-// TODO: Добавить цепочечный паттерн
-// TODO: Реализовать форматированный вывод объекта в консоль
-// TODO: Для build-сценария реализованы не все варианты
-// TODO: Оформить библиотеку как bower-пакет
-// TODO: Реализовать listeners на Morphine-объектах
-
 /***
  * @constructor
  */
-function MorphineArray() {};
+function MorphineArray() {}
 MorphineArray.prototype = new Array();
 
 /***
  * @constructor
  */
-function Morphine() {};
+function Morphine() {}
 
 Morphine.extend = MorphineArray.extend = function(source) {
     if (source) {
@@ -83,19 +73,22 @@ function BuildObject (path, value) {
                 } else if (intRegexp.test(props[i])) {
                     if (typeof iter[props[i]] === 'undefined') {
                         console.error("Элемент %o не существует", props.slice(0, i+1).join('.'));
+                    } else {
+                        // TODO: Если элемент существует ничего не делаем, т.к. нужно продолжить работу с текущим элементом
                     }
                 } else {
                     iter[props[i]] = (typeof iter[props[i]] !== 'undefined') ? iter[props[i]] : new MorphineArray();
                 }
             } else {
                 if (intRegexp.test(props[i])) {
-                    if (typeof iter[props[i]] === 'undefined') {
+                    /*if (typeof iter[props[i]] === 'undefined') {
                         // TODO: Неустоявшееся поведение: Если элемент еще не существует - ничего с ним не делаем, т.к. не ясно что с ним делать
                         console.info("TODO: Неустоявшееся поведение: Если элемент еще не существует - ничего с ним не делаем, т.к. не ясно что с ним делать");
                     } else {
-                        // TODO: Неустоявшееся поведение: Если элемент уже существует - ничего с ним не делаем, т.к. не ясно что с ним делать
-                        console.info("TODO: Неустоявшееся поведение: Если элемент уже существует - ничего с ним не делаем, т.к. не ясно что с ним делать");
-                    }
+                        // TODO: Resolve Неустоявшееся поведение: Если элемент уже существует - ничего с ним не делаем, т.к. нужно продолжить работу с существующим элементом
+                        console.info("TODO: Resolve Неустоявшееся поведение: Если элемент уже существует - ничего с ним не делаем, т.к. нужно продолжить работу с существующим элементом");
+                    }*/
+                    iter[props[i]] = (typeof iter[props[i]] !== 'undefined') ? iter[props[i]] : new Morphine();
                 } else if (props[i] === '$') {
                     iter.push(new Morphine());
                 } else {

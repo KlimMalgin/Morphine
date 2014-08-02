@@ -3,13 +3,13 @@
 /***
  * @constructor
  */
-function MorphineArray() {};
+function MorphineArray() {}
 MorphineArray.prototype = new Array();
 
 /***
  * @constructor
  */
-function Morphine() {};
+function Morphine() {}
 
 Morphine.extend = MorphineArray.extend = function(source) {
     if (source) {
