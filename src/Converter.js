@@ -3,7 +3,8 @@ function converter (obj) {
     var morph = this;
     if (obj.constructor === Object) {
         ConvertObject(obj, morph);
-    } else if (obj.constructor === Array) {
+    } else
+    if (obj.constructor === Array) {
         ConvertArray(obj, morph);
     }
     return morph;

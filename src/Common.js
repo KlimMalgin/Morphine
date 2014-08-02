@@ -78,7 +78,23 @@ Common.prototype.get = function (property) {
  * @return {Morphine} Получившийся объект
  **/
 Common.prototype.set = function (path, value) {
-    BuildObject.bind(this)(path, (typeof value !== 'undefined') ? value : {});
+    var valToSet = (typeof value !== 'undefined') ? value : {},
+        checkResult = checkType(valToSet),
+        mObject = null;
+
+    if (!checkResult) {
+        if (checkType(valToSet, Object)) {
+            mObject = new Morphine();
+        } else
+        if (checkType(valToSet, Array)) {
+            mObject = new MorphineArray();
+        } else
+        if (checkType(valToSet, Morphine) || checkType(valToSet, MorphineArray)) {
+            checkResult = true;
+        }
+    }
+
+    BuildObject.bind(this)(path, checkResult ? valToSet : converter.bind(mObject)(valToSet));
     return this;
 };
 
