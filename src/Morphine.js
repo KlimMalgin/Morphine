@@ -9,7 +9,11 @@ MorphineArray.prototype = new Array();
 /***
  * @constructor
  */
-function Morphine() {}
+function Morphine(obj) {
+    if (obj) {
+        this.build(obj);
+    }
+}
 
 Morphine.extend = MorphineArray.extend = function(source) {
     if (source) {

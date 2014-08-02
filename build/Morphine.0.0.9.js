@@ -14,7 +14,11 @@ MorphineArray.prototype = new Array();
 /***
  * @constructor
  */
-function Morphine() {}
+function Morphine(obj) {
+    if (obj) {
+        this.build(obj);
+    }
+}
 
 Morphine.extend = MorphineArray.extend = function(source) {
     if (source) {
@@ -212,6 +216,58 @@ function ArrayToString (obj) {
 }
 
 
+function converter (obj) {
+    var morph = this;
+    if (obj.constructor === Object) {
+        ConvertObject(obj, morph);
+    } else if (obj.constructor === Array) {
+        ConvertArray(obj, morph);
+    }
+    return morph;
+}
+
+function ConvertObject (obj, morph) {
+    var morph = morph || new Morphine();
+    for (var key in obj) {
+        if (!obj.hasOwnProperty(key)) continue;
+
+        if (obj[key].constructor === Object) {
+            //morph.set(key, new Morphine());
+            morph.set(key, ConvertObject(obj[key]));
+        } else
+        if (obj[key].constructor === Array) {
+            morph.set(key, ConvertArray(obj[key]));
+        } else
+        if (obj[key].constructor === String || obj[key].constructor === Boolean || obj[key].constructor === Number) {
+            morph.set(key, obj[key]);
+        } else {
+            console.error("Конструктор не определен %o %o %o", obj, key, obj[key]);
+        }
+    }
+    return morph;
+}
+
+function ConvertArray (obj, morph) {
+    var morph = morph || new MorphineArray(),
+        ln = obj.length;
+
+    for (var key = 0; key < ln; key++) {
+        if (obj[key].constructor === Object) {
+            morph.push(ConvertObject(obj[key]));
+        } else
+        if (obj[key].constructor === Array) {
+            morph.push(ConvertArray(obj[key]));
+        } else
+        if (obj[key].constructor === String || obj[key].constructor === Boolean || obj[key].constructor === Number) {
+            morph.push(obj[key]);
+        } else {
+            console.error("Конструктор не определен %o %o %o", obj, key, obj[key]);
+        }
+    }
+    return morph;
+}
+
+
 /***
  * Класс общих методов для Morphine и MorphineArray
  * @constructor
@@ -271,6 +327,19 @@ Common.prototype.get = function (property) {
 };
 
 /**
+ * Метод установит значение по указанному path. Если path или его часть
+ * не существует, то недостающие элементы будут выстроены в соответствии
+ * со структурой path.
+ * @param {String} path Задает элемент для установки значения
+ * @param {*} value Значение последнего элемента в path. По умолчанию - пустой объект
+ * @return {Morphine} Получившийся объект
+ **/
+Common.prototype.set = function (path, value) {
+    var newObject = BuildObject.bind(this)(path, (typeof value !== 'undefined') ? value : {});
+    return newObject;
+};
+
+/**
  * Метод добавит элемент в текущий Morphine-объект
  * @param {String} key ключ нового элемента
  * @param {String} el элемент, который будет добавлен
@@ -290,13 +359,10 @@ Common.prototype.remove = function (key) {
 /**
  * Метод выстроит объект по структуре указанной в path. В последний
  * элемент path поместит значение value.
- * @param {String} path Задает структуру объекта для построения
- * @param {*} value Значение последнего элемента в path
+ * @param {String} obj Объект для преобразования
  **/
-Common.prototype.build = function (path, value) {
-    var newObject = BuildObject.bind(this)(path, value);
-    //MergeObjects.bind(this)(this, newObject);
-    //return this;
+Common.prototype.build = function (obj) {
+    var newObject = converter.bind(this)(obj || {});
     return newObject;
 };
 

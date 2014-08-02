@@ -58,6 +58,19 @@ Common.prototype.get = function (property) {
 };
 
 /**
+ * Метод установит значение по указанному path. Если path или его часть
+ * не существует, то недостающие элементы будут выстроены в соответствии
+ * со структурой path.
+ * @param {String} path Задает элемент для установки значения
+ * @param {*} value Значение последнего элемента в path. По умолчанию - пустой объект
+ * @return {Morphine} Получившийся объект
+ **/
+Common.prototype.set = function (path, value) {
+    var newObject = BuildObject.bind(this)(path, (typeof value !== 'undefined') ? value : {});
+    return newObject;
+};
+
+/**
  * Метод добавит элемент в текущий Morphine-объект
  * @param {String} key ключ нового элемента
  * @param {String} el элемент, который будет добавлен
@@ -77,13 +90,10 @@ Common.prototype.remove = function (key) {
 /**
  * Метод выстроит объект по структуре указанной в path. В последний
  * элемент path поместит значение value.
- * @param {String} path Задает структуру объекта для построения
- * @param {*} value Значение последнего элемента в path
+ * @param {String} obj Объект для преобразования
  **/
-Common.prototype.build = function (path, value) {
-    var newObject = BuildObject.bind(this)(path, value);
-    //MergeObjects.bind(this)(this, newObject);
-    //return this;
+Common.prototype.build = function (obj) {
+    var newObject = converter.bind(this)(obj || {});
     return newObject;
 };
 
