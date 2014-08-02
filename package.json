@@ -1,6 +1,6 @@
 {
     "name": "Morphine",
-    "version": "0.0.6",
+    "version": "0.0.7",
     "author": "Brunetkin Andrey <fxklim@gmail.com>",
     "description": "Extended JavaScript collections",
     "devDependencies": {

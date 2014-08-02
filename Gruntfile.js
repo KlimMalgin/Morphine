@@ -10,6 +10,7 @@ module.exports = function(grunt) {
                     'src/Morphine.js',
                     'src/Build.js',
                     'src/Merge.js',
+                    'src/Stringify.js',
                     'src/Common.js',
                     'src/postfix.js'
                 ],

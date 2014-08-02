@@ -3,7 +3,7 @@
  * Класс общих методов для Morphine и MorphineArray
  * @constructor
  */
-function Common() {};
+function Common() {}
 
 /**
  * Проверит наличие свойства key в текущем объекте
@@ -95,6 +95,21 @@ Common.prototype.merge = function (newObject) {
     return MergeObjects.bind(this)(this, newObject);
 };
 
+/***
+ * Вернет строковое представление объекта
+ * @returns {String}
+ */
+Common.prototype.stringify = function () {
+    return stringify.bind(this)();
+};
+
+/***
+ * Преобразует Morphine-объект в нативный JavaScript-объект
+ * @returns {*}
+ */
+Common.prototype.toJSON = function () {
+    return JSON.parse(stringify.bind(this)());
+};
 
 Morphine.extend(Common.prototype);
 MorphineArray.extend(Common.prototype);

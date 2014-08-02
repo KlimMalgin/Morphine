@@ -35,7 +35,7 @@ function checkType (real, expect) {
     expect = expect ? [expect] : [Boolean, String, Number];
     var ln = expect.length;
     for (var i = 0; i < ln; i++) {
-        if (expect[i] === real) {
+        if (expect[i] === real || expect[i] === real.constructor) {
             return true;
         }
     }

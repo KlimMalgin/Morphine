@@ -5,12 +5,13 @@ var Morphine = (function (factory) {
 
 
 
-// TODO: Merge сейчас работает некорректно. Если встречаются объекты с одинаковыми названиями, то старый объект заменяется новым без проверки вложенных свойств.
-// TODO: Реализовать корректный метод stringify для коллекции
 // TODO: Если при создании Morphine-объекта ему в качестве параметра передается массив или объект - нужно преобразовать его в Morphine-сущность
-// TODO: Вынести билдер в отдельный файл
 // TODO: Добавить тесты
-// TODO: Добавить Gulp для сборки
+// TODO: Добавить метод create
+// TODO: Добавить метод config
+// TODO: Добавить цепочечный паттерн
+// TODO: Реализовать форматированный вывод объекта в консоль
+// TODO: Для build-сценария реализованы не все варианты
 // TODO: Оформить библиотеку как bower-пакет
 // TODO: Реализовать listeners на Morphine-объектах
 
@@ -149,7 +150,7 @@ function checkType (real, expect) {
     expect = expect ? [expect] : [Boolean, String, Number];
     var ln = expect.length;
     for (var i = 0; i < ln; i++) {
-        if (expect[i] === real) {
+        if (expect[i] === real || expect[i] === real.constructor) {
             return true;
         }
     }
@@ -157,11 +158,72 @@ function checkType (real, expect) {
 }
 
 
+function stringify() {
+    var currentString = "";
+    if (this.isObject()) {
+        currentString = ObjectToString(this);
+    } else if (this.isArray()) {
+        currentString = ArrayToString(this);
+    }
+    return currentString;
+}
+
+function ObjectToString (obj) {
+    var start = "{", end = "}",
+        result = [], item = "";
+    for (var key in obj) {
+        if (!obj.has(key)) continue;
+        item += "\"" + key + "\":";
+        if (obj[key].isObject && obj[key].isObject()) {
+            item += ObjectToString(obj[key]);
+        } else
+        // TODO: Bug. Метод isArray() не доступен в прототипе.
+        if ((obj[key].isArray && obj[key].isArray()) || obj[key].constructor === Array) {
+            item += ArrayToString(obj[key]);
+        } else
+        if (checkType(obj[key])) {
+            if (checkType(obj[key], String)) {
+                item += "\"" + obj[key] + "\"";
+            } else {
+                item += obj[key];
+            }
+        } else
+        if (checkType(obj[key], Object) || checkType(obj[key], Array)) {
+            item += JSON.stringify(obj[key]);
+        }
+        result.push(item);item = "";
+    }
+    return start + result.join(',') + end;
+}
+
+function ArrayToString (obj) {
+    var start = "[", end = "]",
+        result = [], item = "";
+    for (var key in obj) {
+        if (!obj.has(key) || key === 'length') continue;
+        if (obj[key].isObject && obj[key].isObject()) {
+            item += ObjectToString(obj[key]);
+        } else
+        if (obj[key].isArray && obj[key].isArray()) {
+            item += ArrayToString(obj[key]);
+        } else
+        if (checkType(obj[key])) {
+            item += obj[key];
+        } else
+        if (checkType(obj[key], Object) || checkType(obj[key], Array)) {
+            item += JSON.stringify(obj[key]);
+        }
+        result.push(item);item = "";
+    }
+    return start + result.join(',') + end;
+}
+
+
 /***
  * Класс общих методов для Morphine и MorphineArray
  * @constructor
  */
-function Common() {};
+function Common() {}
 
 /**
  * Проверит наличие свойства key в текущем объекте
@@ -253,10 +315,25 @@ Common.prototype.merge = function (newObject) {
     return MergeObjects.bind(this)(this, newObject);
 };
 
+/***
+ * Вернет строковое представление объекта
+ * @returns {String}
+ */
+Common.prototype.stringify = function () {
+    return stringify.bind(this)();
+};
+
+/***
+ * Преобразует Morphine-объект в нативный JavaScript-объект
+ * @returns {*}
+ */
+Common.prototype.toJSON = function () {
+    return JSON.parse(stringify.bind(this)());
+};
 
 Morphine.extend(Common.prototype);
 MorphineArray.extend(Common.prototype);
 
 
-    return Morphine;
+return Morphine;
 });
