@@ -5,6 +5,10 @@ var Morphine = (function (factory) {
 
 
 
+// TODO: Когда будет готов генератор path-ов нужно сделать билдер объекта из path-массива
+// TODO: Для генераторов неализовать правила обработчики, которые в процессе построения объекта, либо генерации json/path-представления способны обрабатывать сериализуемые, либо компилируемые элементы в соответствии с зананным набором правил. Набор правил задается как набор функций, которые выполняются на текущем элементе последовательно.
+
+
 /***
  * @constructor
  */
@@ -262,6 +266,58 @@ function ConvertArray (obj, morph) {
 }
 
 
+
+function PathGenerator () {
+    var paths = [];
+    if (this.isObject()) {
+        ObjectPathGenerator(this, "");
+    } else
+    if (this.isArray()) {
+        ArrayPathGenerator(this, "");
+    }
+    return paths;
+}
+
+function ObjectPathGenerator (item, prev_path) {
+    var path = "";
+    if (checkType(item)) {
+        // TODO: Значения и простые типы не добавляем
+    } else
+    if (item.isEmpty()) {
+        // TODO: Не ясно что добавлять в path
+    } else {
+        for (var key in item) {
+            if (item.isObject && item.isObject()) {
+                path = ObjectPathGenerator(item[key], prev_path + "." + key);
+            } else
+            if (item.isArray && item.isArray()) {
+                path = ArrayPathGenerator(item[key], prev_path + "." + key);
+            }
+        }
+    }
+    return path;
+}
+
+function ArrayPathGenerator (item, prev_path) {
+    var path = "";
+    if (checkType(item)) {
+        // TODO: Значения и простые типы не добавляем
+    } else
+    if (item.isEmpty()) {
+        // TODO: Не ясно что добавлять в path
+    } else {
+        for (var key in item) {
+            if (item.isObject && item.isObject()) {
+                path = ObjectPathGenerator(item[key], prev_path + "." + key);
+            } else
+            if (item.isArray && item.isArray()) {
+                path = ArrayPathGenerator(item[key], prev_path + "." + key);
+            }
+        }
+    }
+    return path;
+}
+
 /***
  * Класс общих методов для Morphine и MorphineArray
  * @constructor
@@ -287,6 +343,17 @@ Common.prototype.create = function (obj) {
  **/
 Common.prototype.has = function (key) {
     return this.hasOwnProperty(key);
+};
+
+/***
+ * Проверит является ли текущий объект пустым
+ * @returns {boolean}
+ */
+Common.prototype.isEmpty = function () {
+    for (var key in this) {
+        if (this.has(key)) return false;
+    }
+    return true;
 };
 
 /**
@@ -410,6 +477,14 @@ Common.prototype.stringify = function () {
  */
 Common.prototype.toJSON = function () {
     return JSON.parse(stringify.bind(this)());
+};
+
+/***
+ * Сериализует объект в набор path-значений
+ * @returns {Array}
+ */
+Common.prototype.toPaths = function () {
+    return PathGenerator.bind(this)();
 };
 
 Morphine.extend(Common.prototype);

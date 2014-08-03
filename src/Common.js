@@ -160,5 +160,13 @@ Common.prototype.toJSON = function () {
     return JSON.parse(stringify.bind(this)());
 };
 
+/***
+ * Сериализует объект в набор path-значений
+ * @returns {Array}
+ */
+Common.prototype.toPaths = function () {
+    return PathGenerator.bind(this)();
+};
+
 Morphine.extend(Common.prototype);
 MorphineArray.extend(Common.prototype);

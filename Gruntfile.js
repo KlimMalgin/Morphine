@@ -12,6 +12,7 @@ module.exports = function(grunt) {
                     'src/Merge.js',
                     'src/Stringify.js',
                     'src/Converter.js',
+                    'src/PathGenerator.js',
                     'src/Common.js',
                     'src/postfix.js'
                 ],
