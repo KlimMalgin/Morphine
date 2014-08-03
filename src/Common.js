@@ -26,6 +26,17 @@ Common.prototype.has = function (key) {
     return this.hasOwnProperty(key);
 };
 
+/***
+ * Проверит является ли текущий объект пустым
+ * @returns {boolean}
+ */
+Common.prototype.isEmpty = function () {
+    for (var key in this) {
+        if (this.has(key)) return false;
+    }
+    return true;
+};
+
 /**
  * Проверит свойство объекта на undefined
  * @param {String} key ключ элемента
