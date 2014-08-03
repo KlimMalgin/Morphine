@@ -49,15 +49,15 @@ Common.prototype.isNull = function (key) {
  * @return {Boolean} Результат проверки. true - коллекция является объектом == null, false - коллекция не является объектом
  **/
 Common.prototype.isObject = function () {
-    return this.constructor === Morphine;   // (this.isUndefined('__type__') || this.__type__ === "Object");
+    return this.constructor === Morphine;
 };
 
 /**
  * Проверит принадлежность коллекции к типу массива
  * @return {Boolean} Результат проверки. true - коллекция является массивом == null, false - коллекция не является массивом
  **/
-Common.prototype.isArray = function () {  // TODO: Не доступен для MorphineArray
-    return this.constructor === MorphineArray;  //this.__type__ === "Array";
+Common.prototype.isArray = function () {
+    return this.constructor === MorphineArray;
 };
 
 /**
