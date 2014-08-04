@@ -229,6 +229,9 @@ function ConvertObject (obj, morph) {
     for (var key in obj) {
         if (!obj.hasOwnProperty(key)) continue;
 
+        if (typeof obj[key] === 'undefined' || obj[key] === null) {
+            continue;
+        } else
         if (obj[key].constructor === Object) {
             //morph.set(key, new Morphine());
             morph.set(key, ConvertObject(obj[key]));
@@ -250,6 +253,10 @@ function ConvertArray (obj, morph) {
         ln = obj.length;
 
     for (var key = 0; key < ln; key++) {
+        
+        if (typeof obj[key] === 'undefined' || obj[key] === null) {
+            continue;
+        } else
         if (obj[key].constructor === Object) {
             morph.push(ConvertObject(obj[key]));
         } else
