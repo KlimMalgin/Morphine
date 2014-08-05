@@ -27,6 +27,9 @@ module.exports = function(grunt) {
                 src: 'build/<%= pkg.name %>.<%= pkg.version %>.js',
                 dest: 'build/<%= pkg.name %>.<%= pkg.version %>.min.js'
             }
+        },
+        qunit: {
+            files: ['tests/index.html']
         }
     });
 
@@ -35,7 +38,12 @@ module.exports = function(grunt) {
 
     grunt.loadNpmTasks('grunt-contrib-uglify');
 
+    grunt.loadNpmTasks('grunt-contrib-qunit');
+
+    // grunt-contrib-qunit
     // Default task(s).
     grunt.registerTask('default', ['concat', 'uglify']);
+
+    grunt.registerTask('test', 'qunit');
 
 };
