@@ -1,4 +1,5 @@
 [![Build Status](https://travis-ci.org/KlimMalgin/Morphine.svg?branch=master)](https://travis-ci.org/KlimMalgin/Morphine)
+[![Coverage Status](https://coveralls.io/repos/KlimMalgin/Morphine/badge.png)](https://coveralls.io/r/KlimMalgin/Morphine)
 
 Morphine
 ========
