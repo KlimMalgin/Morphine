@@ -3,7 +3,7 @@ QUnit.module("PathGenerator");
 
 
 QUnit.test("Генерация path-массива и сравнение его с эталоном", function(assert) {
-    var morph = null;
+    /*var morph = null;
     morph = new Morphine();
     morph.set('root.one.$.name', 'My custom value');
 
@@ -15,7 +15,7 @@ QUnit.test("Генерация path-массива и сравнение его 
             "root.one.0.name"
         ];
 
-    assert.deepEqual(morphPathList, pathList, "Сравнение объекта генерируемого из пути и эталонного path-списка");
+    assert.deepEqual(morphPathList, pathList, "Сравнение объекта генерируемого из пути и эталонного path-списка");*/
 
     var j = new Morphine({n: [{name: 1}]}),
         genPathList = j.toPaths(),
