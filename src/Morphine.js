@@ -1,15 +1,12 @@
 
 
-// TODO: Когда будет готов генератор path-ов нужно сделать билдер объекта из path-массива
-// TODO: Для генераторов неализовать правила обработчики, которые в процессе построения объекта, либо генерации json/path-представления способны обрабатывать сериализуемые, либо компилируемые элементы в соответствии с зананным набором правил. Набор правил задается как набор функций, которые выполняются на текущем элементе последовательно.
-
-
 /***
  * @constructor
  */
-function MorphineArray() { this.constructor = MorphineArray; }
+function MorphineArray() { /*this.constructor = MorphineArray;*/ }
 MorphineArray.prototype = new Array();
 MorphineArray.prototype = new MorphineArray();
+MorphineArray.prototype.constructor = MorphineArray;
 
 /***
  * @constructor

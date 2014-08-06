@@ -1,17 +1,17 @@
 
-
 function PathGenerator () {
     var paths = [];
     if (this.isObject()) {
-        ObjectPathGenerator(this, "");
+        ObjectPathGenerator(this, "", paths);
     } else
     if (this.isArray()) {
-        ArrayPathGenerator(this, "");
+        ArrayPathGenerator(this, "", paths);
     }
     return paths;
 }
 
-function ObjectPathGenerator (item, prev_path) {
+// TODO: Методы ObjectPathGenerator и ArrayPathGenerator идентичны. Нужно их реорганизовать
+function ObjectPathGenerator (item, prev_path, path_list) {
     var path = "";
     if (checkType(item)) {
         // TODO: Значения и простые типы не добавляем
@@ -20,18 +20,25 @@ function ObjectPathGenerator (item, prev_path) {
         // TODO: Не ясно что добавлять в path
     } else {
         for (var key in item) {
+            // TODO: Проверка key === "length" - это костыль. Нужно избавиться от свойства length в массиве
+            if (!item.has(key) || key === "length") continue;
             if (item.isObject && item.isObject()) {
-                path = ObjectPathGenerator(item[key], prev_path + "." + key);
+                // TODO: Повторяющаяся проверка. Нужно от нее избавиться
+                path = prev_path + ((prev_path.length && prev_path.length > 0) ? "." : "") + key;
+                path_list.push(path);
+                ObjectPathGenerator(item[key], path, path_list);
             } else
             if (item.isArray && item.isArray()) {
-                path = ArrayPathGenerator(item[key], prev_path + "." + key);
+                // TODO: Повторяющаяся проверка. Нужно от нее избавиться
+                path = prev_path + ((prev_path.length && prev_path.length > 0) ? "." : "") + key;
+                path_list.push(path);
+                ArrayPathGenerator(item[key], path, path_list);
             }
         }
     }
-    return path;
 }
 
-function ArrayPathGenerator (item, prev_path) {
+function ArrayPathGenerator (item, prev_path, path_list) {
     var path = "";
     if (checkType(item)) {
         // TODO: Значения и простые типы не добавляем
@@ -40,13 +47,20 @@ function ArrayPathGenerator (item, prev_path) {
         // TODO: Не ясно что добавлять в path
     } else {
         for (var key in item) {
+            // TODO: Проверка key === "length" - это костыль. Нужно избавиться от свойства length в массиве
+            if (!item.has(key) || key === "length") continue;
             if (item.isObject && item.isObject()) {
-                path = ObjectPathGenerator(item[key], prev_path + "." + key);
+                // TODO: Повторяющаяся проверка. Нужно от нее избавиться
+                path = prev_path + ((prev_path.length && prev_path.length > 0) ? "." : "") + key;
+                path_list.push(path);
+                path = ObjectPathGenerator(item[key], path, path_list);
             } else
             if (item.isArray && item.isArray()) {
-                path = ArrayPathGenerator(item[key], prev_path + "." + key);
+                // TODO: Повторяющаяся проверка. Нужно от нее избавиться
+                path = prev_path + ((prev_path.length && prev_path.length > 0) ? "." : "") + key;
+                path_list.push(path);
+                path = ArrayPathGenerator(item[key], path, path_list);
             }
         }
     }
-    return path;
 }

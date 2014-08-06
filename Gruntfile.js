@@ -1,22 +1,28 @@
 module.exports = function(grunt) {
 
+    var sourceFiles = [
+        'src/prefix.js',
+        'src/Morphine.js',
+        'src/Build.js',
+        'src/Merge.js',
+        'src/Stringify.js',
+        'src/Converter.js',
+        'src/PathGenerator.js',
+        'src/Common.js',
+        'src/postfix.js'
+    ];
+
     // Project configuration.
     grunt.initConfig({
         pkg: grunt.file.readJSON('package.json'),
         concat: {
             main: {
-                src: [
-                    'src/prefix.js',
-                    'src/Morphine.js',
-                    'src/Build.js',
-                    'src/Merge.js',
-                    'src/Stringify.js',
-                    'src/Converter.js',
-                    'src/PathGenerator.js',
-                    'src/Common.js',
-                    'src/postfix.js'
-                ],
+                src: sourceFiles,
                 dest: 'build/<%= pkg.name %>.<%= pkg.version %>.js'
+            },
+            test: {
+                src: sourceFiles,
+                dest: 'tests/<%= pkg.name %>.js'
             }
         },
         uglify: {
