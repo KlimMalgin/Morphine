@@ -1,18 +1,12 @@
 
-var morph = null;
-
-QUnit.module( "PathGenerator", {
-    setup: function() {
-        morph = new Morphine();
-        morph.set('root.one.$.name', 'My custom value');
-    },
-    teardown: function() {
-        // clean up after each test
-    }
-});
+QUnit.module("PathGenerator");
 
 
 QUnit.test("Генерация path-массива и сравнение его с эталоном", function(assert) {
+    var morph = null;
+    morph = new Morphine();
+    morph.set('root.one.$.name', 'My custom value');
+
     var morphPathList = morph.toPaths(),
         pathList = [
             "root",
