@@ -15,5 +15,15 @@ QUnit.test("Генерация path-массива и сравнение его 
             "root.one.0.name"
         ];
 
-    assert.deepEqual(morphPathList, pathList, "Сравнение генерируемого и эталонного path-списков");
+    assert.deepEqual(morphPathList, pathList, "Сравнение объекта генерируемого из пути и эталонного path-списка");
+
+    var j = new Morphine({n: [{name: 1}]}),
+        genPathList = j.toPaths(),
+        jPathList = [
+            "n",
+            "n.0",
+            "n.0.name"
+        ];
+
+    assert.deepEqual(genPathList, jPathList, "Сравнение объекта генерируемого из нативного объекта и эталонного path-списка");
 });
