@@ -479,7 +479,8 @@ Common.prototype.build = function (obj) {
  * @returns {*}
  **/
 Common.prototype.merge = function (newObject) {
-    return MergeObjects.bind(this)(this, newObject);
+    var morph = new Morphine(newObject);
+    return MergeObjects.bind(this)(this, morph);
 };
 
 /***
