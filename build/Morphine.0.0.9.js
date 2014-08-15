@@ -113,8 +113,11 @@ function BuildObject (path, value) {
  */
 function MergeObjects (dst, src) {
     for (var key in src) {
-        if (!src.has(key) || src.isUndefined(key) || src.isNull(key)) continue;
+        if (!src.has(key) || src.isUndefined(key)) continue;
 
+        if ((key in src) && src.isNull && src.isNull(key)) {
+            dst[key] = src[key];
+        } else
         if (checkType(src[key].constructor)) {
             dst[key] = src[key];
         } else {
@@ -227,7 +230,7 @@ function ConvertObject (obj, morph) {
         if (!obj.hasOwnProperty(key)) continue;
 
         if (typeof obj[key] === 'undefined' || obj[key] === null) {
-            continue;
+            morph.set(key, obj[key]);
         } else
         if (obj[key].constructor === Object) {
             //morph.set(key, new Morphine());
@@ -252,7 +255,7 @@ function ConvertArray (obj, morph) {
     for (var key = 0; key < ln; key++) {
         
         if (typeof obj[key] === 'undefined' || obj[key] === null) {
-            continue;
+            morph.push(obj[key]);
         } else
         if (obj[key].constructor === Object) {
             morph.push(ConvertObject(obj[key]));
