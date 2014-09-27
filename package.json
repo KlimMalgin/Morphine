@@ -4,10 +4,8 @@
   "author": "Brunetkin Andrey <fxklim@gmail.com>",
   "description": "Extended JavaScript collections",
   "devDependencies": {
-    "grunt": "latest",
-    "grunt-contrib-nodeunit": "latest",
-    "grunt-contrib-uglify": "latest",
-    "grunt-contrib-qunit": "^0.5.2",
-    "grunt-contrib-concat": "latest"
+    "gulp": "~3.8.7",
+    "browserify": "~5.11.0",
+    "gulp-browserify": "~0.5.0"
   }
 }
