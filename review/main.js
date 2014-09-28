@@ -3,3 +3,5 @@
  */
 'use strict';
 module.exports = require('./Morphine');
+
+console.log(this);
