@@ -12,11 +12,10 @@
         root.Morphine = factory(root/*, {}*/);
     }
 }(this, function (root) {
-    //Morphine.VERSION = '0.8.0';
 
-    function Morphine(obj) {
+    function Morphine(obj, value) {
         if (obj) {
-            BuildObject.call(this, obj);
+            builder.call(this, obj, value);
         }
     }
 
@@ -30,60 +29,71 @@
     Morphine.prototype.version = '0.0.9';
 
 
+    
+    
     /**
      * @private
-     * Метод выстроит объект по структуре указанной в path
+     * Метод выстроит объект по структуре указанной в path. Если указано 
+     * значение value - присвоит его последнему элементу.
      * @param {String} path Задает структуру объекта для построения
      * @param {*} value Значение последнего элемента в path
      **/
-    function BuildObject(path, value) {
-        var props = path.split('.'),
-            iter = this, base = iter,
+    function builder (path, value) {
+        var pathArray = path.split('.'),
             intRegexp = /^[0-9]$/;
-
-        for (var i = 0; i < props.length; i++) {
-            if (typeof iter === 'undefined') break;
-
-            if (i == (props.length - 1)) {
-                if (props[i] === '$') {
-                    iter.push(value);
-                } else if (intRegexp.test(props[i])) {
-                    if (typeof iter[props[i]] === 'undefined') {
+            
+        innerBuilder.call(this, pathArray, value);
+            
+        function innerBuilder (pathArray, value) {
+            var index = pathArray.shift();
+            var testInt = intRegexp.test(pathArray[0]);
+            var testCollection = pathArray[0] === '$';
+            
+            if (pathArray.length === 0) {
+                if (index === '$') {
+                    this.push(value);
+                } else if (intRegexp.test(index)) {
+                    if (typeof this[index] === 'undefined') {
                         // TODO: Заменить все console-выводы на исключения
-                        console.error("Элемент %o не существует", props.slice(0, i + 1).join('.'));
+                        console.error("Элемент %o не существует", index);
                     }
                 } else {
-                    iter[props[i]] = value;
+                    this[index] = value;
                 }
+                return;
             } else {
-                if (intRegexp.test(props[i + 1]) || props[i + 1] === '$') {
-                    if (props[i] === '$') {
-                        iter.push(new MorphineArray());
-                    } else if (intRegexp.test(props[i])) {
-                        if (typeof iter[props[i]] === 'undefined') {
-                            console.error("Элемент %o не существует", props.slice(0, i + 1).join('.'));
+                if (testInt || testCollection) {
+                    if (testCollection) {
+                        if (index === "$") {
+                            this.push(new MorphineArray());
+                        } else {
+                            this[index] = new MorphineArray();
+                        }
+                    } else if (testInt) {
+                        if (typeof this[index] === 'undefined') {
+                            console.error("Элемент %o не существует", index);
                         }
                     } else {
-                        iter[props[i]] = (typeof iter[props[i]] !== 'undefined') ? iter[props[i]] : new MorphineArray();
+                        this[index] = (typeof this[index] !== 'undefined') ? this[index] : new MorphineArray();
                     }
                 } else {
-                    if (intRegexp.test(props[i])) {
-                        iter[props[i]] = (typeof iter[props[i]] !== 'undefined') ? iter[props[i]] : new Morphine();
-                    } else if (props[i] === '$') {
-                        iter.push(new Morphine());
+                    if (intRegexp.test(index)) {
+                        this[index] = (typeof this[index] !== 'undefined') ? this[index] : new Morphine();
+                    } else if (index === '$') {
+                        this.push(new Morphine());
                     } else {
-                        iter[props[i]] = (typeof iter[props[i]] !== 'undefined') ? iter[props[i]] : new Morphine();
+                        this[index] = (typeof this[index] !== 'undefined') ? this[index] : new Morphine();
                     }
-                }
-
-                if (props[i] === '$') {
-                    iter = iter[iter.length - 1];
-                } else {
-                    iter = iter[props[i]];
+                }  
+                
+                // Если в коллекцию $ был добавлен очередной элемент - получаем его индекс, для дальнейшего построения
+                if (index === '$') {
+                    index = this.length-1;
                 }
             }
+            
+            innerBuilder.call(this[index], pathArray, value);
         }
-        return base;
     }
 
     /**
