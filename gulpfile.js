@@ -10,6 +10,8 @@ var source = require('vinyl-source-stream');
 var argv = require('yargs').argv;
 var streamify = require('gulp-streamify');
 var uglify = require('gulp-uglifyjs');
+var require_bundler = require("gulp-requirejs-bundler");
+var rjs = require('gulp-requirejs');
 
 var src = {
     index: ['./review/main.js'],
@@ -24,7 +26,6 @@ var env = {
     production : argv.production || false
 };
 
-
 gulp.task('scripts', function() {
 
     // Main entry point
@@ -32,8 +33,8 @@ gulp.task('scripts', function() {
         transform: [
             'deamdify'
         ],
-        insertGlobals : !env.production,
-        debug : !env.production
+        insertGlobals : false, //!env.production,
+        debug : false   //!env.production
     })
         .bundle()
         .pipe(source('app.js'))
@@ -44,6 +45,15 @@ gulp.task('min', ['build'], function() {
     return gulp.src(dest.js + '/app.js')
         .pipe(uglify('app.min.js'))
         .pipe(gulp.dest(dest.js))
+});
+
+gulp.task('rjs', function() {
+    rjs({
+        name: 'main',
+        baseUrl: './rjs',
+        out: 'rjs.js'
+    })
+    .pipe(gulp.dest('./build/delpoy/')); // pipe it to the output DIR
 });
 
 // The default task

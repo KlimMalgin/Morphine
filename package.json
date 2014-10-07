@@ -8,9 +8,11 @@
     "deamdify": "^0.1.1",
     "gulp": "~3.8.7",
     "gulp-browserify": "~0.5.0",
-    "vinyl-source-stream": "^1.0.0",
-    "yargs": "~1.3.1",
+    "gulp-requirejs": "^0.1.3",
+    "gulp-requirejs-bundler": "^0.1.1",
     "gulp-streamify": "~0.0.5",
-    "gulp-uglifyjs": "~0.4.2"
+    "gulp-uglifyjs": "~0.4.2",
+    "vinyl-source-stream": "^1.0.0",
+    "yargs": "~1.3.1"
   }
 }
