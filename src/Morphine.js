@@ -26,6 +26,25 @@
 
     Morphine.prototype.version = '0.0.9';
 
+    var CommonPrototypeMixin = {
+        isObject: function () {
+            return this.constructor === Morphine;
+        },
+        isArray: function () {
+            return this.constructor === MorphineArray;
+        },
+        set: function (path, value) {
+            setter.call(this, path, value);
+        },
+        get: function (path) {
+            var pathArray = path.split('.');
+            return getter(pathArray, this);
+        }
+    };
+    
+    var MorphinePrototypeMixin = {};
+    var MorphineArrayPrototypeMixin = {};
+
     /**
      * Скопирует в прототип this все свойства объекта source
      * @param {Object} source объект с набором свойств для копирования
@@ -39,8 +58,26 @@
             }
         }
     };
-    
-    
+
+    Morphine.mixin(CommonPrototypeMixin);
+    MorphineArray.mixin(CommonPrototypeMixin);
+
+    /**
+     * @private
+     * Проверяет соответствие фактического типа real примитивным типам.
+     * Если задан ожидаемый тип expect, то проверяется соответствие только с ним.
+     */
+    function checkType (real, expect) {
+        expect = expect ? [expect] : [Boolean, String, Number];
+        var ln = expect.length;
+        for (var i = 0; i < ln; i++) {
+            if (expect[i] === real || expect[i] === real.constructor) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     /**
      * @private
      * Метод выстроит объект по структуре указанной в path. Если указано 
@@ -148,24 +185,55 @@
             }
         }
 
-        builder.bind(this)(path, checkResult ? valToSet : '[morphine-object]'/*converter.bind(mObject)(valToSet)*/);
+        builder.bind(this)(path, checkResult ? valToSet : converter.bind(mObject)(valToSet));
         return this;
-    };
-    
+    }
+
     /**
-     * @private
-     * Проверяет соответствие фактического типа real примитивным типам.
-     * Если задан ожидаемый тип expect, то проверяется соответствие только с ним.
+     * Преобразует plain объект/массив в Morphine-сущность
      */
-    function checkType (real, expect) {
-        expect = expect ? [expect] : [Boolean, String, Number];
-        var ln = expect.length;
-        for (var i = 0; i < ln; i++) {
-            if (expect[i] === real || expect[i] === real.constructor) {
-                return true;
+    function converter (obj) {
+        //var morph = this;
+                
+        if (checkType(obj, Array)) {
+            return toMorphine.call(this, obj, MorphineArray);
+        } else if (checkType(obj, Object)) {
+            return toMorphine.call(this, obj, Morphine);
+        } else {
+            // obj является примитивным или кастомным типом, поэтому вернем его без изменений
+            return obj;
+        }
+        
+        function toMorphine (obj, construct) {
+            var morph = construct ? new construct() : this;
+            
+            for (var key in obj) {
+                if (!obj.hasOwnProperty(key)) continue;
+
+                if (typeof obj[key] === 'undefined' || obj[key] === null) {
+                    continue;
+                } else if (checkType(obj[key], Object)) {
+                    valueSetter.call(morph, key, toMorphine.call(morph, obj[key]));
+                } else if (checkType(obj[key], Array)) {
+                    valueSetter.call(morph, key, toMorphine.call(morph, obj[key]));
+                } else if (checkType(obj[key])) {
+                    valueSetter.call(morph, key, obj[key]);
+                } else {
+                    console.error("Конструктор не определен %o %o %o", obj, key, obj[key]);
+                }
+            }
+            
+            return morph;
+        }
+        
+        function valueSetter (key, value) {
+            if (this.isObject()) {
+                this.set(key, value);
+            } else if (this.isArray()) {
+                this.push(value);
             }
         }
-        return false;
+        return morph;
     }
 
     return Morphine;
