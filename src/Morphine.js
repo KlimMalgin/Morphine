@@ -15,20 +15,30 @@
 
     function Morphine(obj, value) {
         if (obj) {
-            builder.call(this, obj, value);
+            setter.call(this, obj, value);
         }
     }
 
-    function MorphineArray() {
-    }
-
+    function MorphineArray() {}
     MorphineArray.prototype = new Array();
     MorphineArray.prototype = new MorphineArray();
     MorphineArray.prototype.constructor = MorphineArray;
 
     Morphine.prototype.version = '0.0.9';
 
-
+    /**
+     * Скопирует в прототип this все свойства объекта source
+     * @param {Object} source объект с набором свойств для копирования
+     **/
+    // TODO: Где используется mixin?
+    Morphine.mixin = MorphineArray.mixin = function (source) {
+        if (source) {
+            for (var prop in source) {
+                if (!source.hasOwnProperty(prop)) continue;
+                this.prototype[prop] = source[prop];
+            }
+        }
+    };
     
     
     /**
@@ -97,19 +107,6 @@
     }
 
     /**
-     * Скопирует в прототип this все свойства объекта source
-     * @param {Object} source объект с набором свойств для копирования
-     **/
-    Morphine.mixin = MorphineArray.mixin = function (source) {
-        if (source) {
-            for (var prop in source) {
-                if (!source.hasOwnProperty(prop)) continue;
-                this.prototype[prop] = source[prop];
-            }
-        }
-    };
-
-    /**
      * @private
      * Возвращает объект из источника
      * @param {Array} pathArray  массив содержащий путь до целевого элемента
@@ -122,6 +119,53 @@
             return source[index];
         }
         return getter(pathArray, source[index]);
+    }
+
+
+    /**
+     * @private
+     * Метод установит значение по указанному path. Если path или его часть
+     * не существует, то недостающие элементы будут выстроены в соответствии
+     * со структурой path.
+     * @param {String} path Задает элемент для установки значения
+     * @param {*} value Значение последнего элемента в path. По умолчанию - пустой объект
+     * @return {Morphine} Получившийся объект
+     **/
+    function setter(path, value) {
+        var valToSet = (typeof value !== 'undefined') ? value : {},
+            checkResult = checkType(valToSet),
+            mObject = null;
+
+        if (!checkResult) {
+            if (checkType(valToSet, Object)) {
+                mObject = new Morphine();
+            } else
+            if (checkType(valToSet, Array)) {
+                mObject = new MorphineArray();
+            } else
+            if (checkType(valToSet, Morphine) || checkType(valToSet, MorphineArray)) {
+                checkResult = true;
+            }
+        }
+
+        builder.bind(this)(path, checkResult ? valToSet : '[morphine-object]'/*converter.bind(mObject)(valToSet)*/);
+        return this;
+    };
+    
+    /**
+     * @private
+     * Проверяет соответствие фактического типа real примитивным типам.
+     * Если задан ожидаемый тип expect, то проверяется соответствие только с ним.
+     */
+    function checkType (real, expect) {
+        expect = expect ? [expect] : [Boolean, String, Number];
+        var ln = expect.length;
+        for (var i = 0; i < ln; i++) {
+            if (expect[i] === real || expect[i] === real.constructor) {
+                return true;
+            }
+        }
+        return false;
     }
 
     return Morphine;
