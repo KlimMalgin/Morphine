@@ -193,8 +193,6 @@
      * Преобразует plain объект/массив в Morphine-сущность
      */
     function converter (obj) {
-        //var morph = this;
-                
         if (checkType(obj, Array)) {
             return toMorphine.call(this, obj, MorphineArray);
         } else if (checkType(obj, Object)) {
@@ -213,9 +211,9 @@
                 if (typeof obj[key] === 'undefined' || obj[key] === null) {
                     continue;
                 } else if (checkType(obj[key], Object)) {
-                    valueSetter.call(morph, key, toMorphine.call(morph, obj[key]));
+                    valueSetter.call(morph, key, toMorphine.call(morph, obj[key], Morphine));
                 } else if (checkType(obj[key], Array)) {
-                    valueSetter.call(morph, key, toMorphine.call(morph, obj[key]));
+                    valueSetter.call(morph, key, toMorphine.call(morph, obj[key], MorphineArray));
                 } else if (checkType(obj[key])) {
                     valueSetter.call(morph, key, obj[key]);
                 } else {
