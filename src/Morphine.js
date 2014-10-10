@@ -14,9 +14,7 @@
 }(this, function (root) {
 
     function Morphine(obj, value) {
-        if (obj) {
-            setter.call(this, obj, value);
-        }
+        MorphineBuilder.apply(this, arguments);
     }
 
     function MorphineArray() {}
@@ -26,6 +24,29 @@
 
     Morphine.prototype.version = '0.0.9';
 
+    function MorphineBuilder () {
+        var ln = arguments.length;
+        
+        switch (ln) {
+            case 1:
+                // м.б. объект или path-строка
+                if (checkType(arguments[0], String)) {
+                    setter.apply(this, arguments);
+                } else                
+                // TODO: Возникают проблемы с преобразованием в Morphine, если arguments[0] массив
+                if (checkType(arguments[0], Object) || checkType(arguments[0], Array)) {
+                    converter.call(this, arguments[0], true);
+                }
+                
+            break;
+            
+            case 2:
+                // м.б. path+значение
+                setter.apply(this, arguments);
+            break;      
+        }
+    }
+    
     var CommonPrototypeMixin = {
         isObject: function () {
             return this.constructor === Morphine;
@@ -191,12 +212,14 @@
 
     /**
      * Преобразует plain объект/массив в Morphine-сущность
+     * @param {*} obj объект для преобразования
+     * @param {boolean} self true - преобразовать plain-объект в себя (в this), false - преобразовать в новый объект 
      */
-    function converter (obj) {
+    function converter (obj, self) {
         if (checkType(obj, Array)) {
-            return toMorphine.call(this, obj, MorphineArray);
+            return toMorphine.call(this, obj, self ? null : MorphineArray);
         } else if (checkType(obj, Object)) {
-            return toMorphine.call(this, obj, Morphine);
+            return toMorphine.call(this, obj, self ? null : Morphine);
         } else {
             // obj является примитивным или кастомным типом, поэтому вернем его без изменений
             return obj;
