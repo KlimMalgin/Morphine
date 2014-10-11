@@ -8,6 +8,7 @@
     "gulp": "~3.8.7",
     "gulp-streamify": "~0.0.5",
     "gulp-uglifyjs": "~0.4.2",
+    "mocha": "^1.21.5",
     "vinyl-source-stream": "^1.0.0",
     "yargs": "~1.3.1"
   }

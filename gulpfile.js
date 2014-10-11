@@ -11,12 +11,12 @@ var streamify = require('gulp-streamify');
 var uglify = require('gulp-uglifyjs');
 
 var src = {
-    index: ['./src/Morphine.js'],
-    js: 'review/*.js'
+    index: ['./src/Morphine.js']
 };
 
 var dest = {
-    js: 'build/'
+    js: 'build/',
+    test: 'tests/'
 };
 
 var env = {
@@ -42,6 +42,7 @@ gulp.task('min', function() {
     return gulp.src(src.index)
         .pipe(uglify('Morphine.min.js'))
         .pipe(gulp.dest(dest.js))
+        .pipe(gulp.dest(dest.test));
 });
 
 

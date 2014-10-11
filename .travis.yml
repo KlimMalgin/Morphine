@@ -4,7 +4,7 @@ node_js:
 
 before_script:
   - npm install
-  - npm install -g grunt-cli
+  - gulp min
 
 script:
-  - grunt test
+  - mocha tests/test.js
