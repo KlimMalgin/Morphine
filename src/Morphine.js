@@ -69,6 +69,33 @@
         isArray: function () {
             return this.constructor === MorphineArray;
         },
+        /**
+         * @public
+         * Проверит свойство объекта на null
+         * @param {String} key ключ элемента
+         * @return {Boolean} Результат проверки. true - свойство === null, false - свойство !== null.
+         **/
+        isNull: function (key) {
+            return this[key] === null;
+        },
+        /**
+         * @public
+         * Проверит свойство объекта на undefined
+         * @param {String} key ключ элемента
+         * @return {Boolean} Результат проверки. true - свойство === undefined, false - свойство !== undefined.
+         **/
+        isUndefined: function (key) {
+            return typeof this[key] === 'undefined';
+        },
+        /**
+         * @public
+         * Проверит наличие свойства key в текущем объекте
+         * @param {String} key ключ элемента
+         * @return {Boolean} Результат проверки присутствия поля. true - присутствует, false - отсутствует.
+         **/
+        has: function (key) {
+            return this.hasOwnProperty(key);
+        },
         set: function (path, value) {
             setter.call(this, path, value);
             return this;
