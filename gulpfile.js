@@ -4,22 +4,19 @@
 'use strict';
 
 var gulp = require('gulp');
-var browserify = require('browserify');
 var deamdify = require('deamdify');
 var source = require('vinyl-source-stream');
 var argv = require('yargs').argv;
 var streamify = require('gulp-streamify');
 var uglify = require('gulp-uglifyjs');
-var require_bundler = require("gulp-requirejs-bundler");
-var rjs = require('gulp-requirejs');
 
 var src = {
-    index: ['./review/main.js'],
+    index: ['./src/Morphine.js'],
     js: 'review/*.js'
 };
 
 var dest = {
-    js: 'build/js'
+    js: 'build/'
 };
 
 var env = {
@@ -41,22 +38,14 @@ gulp.task('scripts', function() {
         .pipe(gulp.dest(dest.js))
 });
 
-gulp.task('min', ['build'], function() {
-    return gulp.src(dest.js + '/app.js')
-        .pipe(uglify('app.min.js'))
+gulp.task('min', function() {
+    return gulp.src(src.index)
+        .pipe(uglify('Morphine.min.js'))
         .pipe(gulp.dest(dest.js))
 });
 
-gulp.task('rjs', function() {
-    rjs({
-        name: 'main',
-        baseUrl: './rjs',
-        out: 'rjs.js'
-    })
-    .pipe(gulp.dest('./build/delpoy/')); // pipe it to the output DIR
-});
 
 // The default task
-gulp.task('default', ['scripts']);
+gulp.task('default', ['min']);
 
-gulp.task('build', ['scripts']);
+gulp.task('build', ['min']);
