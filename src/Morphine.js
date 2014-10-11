@@ -35,9 +35,9 @@
     MorphineArray.prototype = new Array();
     MorphineArray.prototype = new MorphineArray();
     MorphineArray.prototype.constructor = MorphineArray;
-
+    
     Morphine.prototype.version = '0.0.9';
-
+    
     function MorphineBuilder () {
         var ln = arguments.length;
         
@@ -96,14 +96,42 @@
         has: function (key) {
             return this.hasOwnProperty(key);
         },
+        /**
+         * Выполнит merge src c текущим объектом
+         * @param {Any Object} src 
+         */
+        merge: function (src) {
+            if (src.isObject || src.isArray) {
+                merger.call(this, src);
+            } else {
+                merger.call(this, converter.call(this, src));
+            }
+            return this;
+        },
+        /**
+         * Установит свойство по указанному path
+         * @param {String} path Путь по которому нужно установить значение
+         * @param {*} value значение для установки в объекте
+         * @return {Morphine} Текущий экземпляр объекта
+         */
         set: function (path, value) {
             setter.call(this, path, value);
             return this;
         },
+        /**
+         * Вернет значение по указанному path
+         * @param {String} path путь по которому нужно получить значение
+         * @return {*} Значение расположенное по заданному пути
+         */
         get: function (path) {
             var pathArray = path.split(CONFIG.separator);
             return getter(pathArray, this);
         },
+        /**
+         * Сконфигурирует текущий экземпляр объекта
+         * @param {Object} options объект опций для конфигурирования текущего экземпляра Morphine
+         * @return {Morphine} Текущий экземпляр объекта
+         */
         config: function () {
             Configure.apply(this, arguments);
             return this;
@@ -271,6 +299,7 @@
      * Преобразует plain объект/массив в Morphine-сущность
      * @param {*} obj объект для преобразования
      * @param {boolean} self true - преобразовать plain-объект в себя (в this), false - преобразовать в новый объект 
+     * @return {Morphine} Результат преобразования
      */
     function converter (obj, self) {
         if (checkType(obj, Array)) {
@@ -312,6 +341,37 @@
             }
         }
         return morph;
+    }
+    
+    
+    /**
+     * @private
+     * Мерджит поля объекта src в this, если эти поля являются 
+     * примитивными типами. Если встречает объект или массив - переходит
+     * в него, создавая аналогичную вложенность в this и продолжает merge.
+     * Объект должен быть Morphine-сущностью.
+     * @param {Morphine} src Исходный объект для мерджа
+     */
+    // TODO: Как выполнится merge для массивов с разными размерностями
+    function merger (src) {
+        var dst = this;
+        for (var key in src) {
+            if (!src.has(key) || src.isUndefined(key) || src.isNull(key)) continue;
+
+            if (checkType(src[key].constructor)) {
+                dst[key] = src[key];
+            } else {
+                if (!dst.has(key)) {
+                    if (src[key].isArray()) {
+                        dst[key] = new MorphineArray();
+                    } else if (src[key].isObject()) {
+                        dst[key] = new Morphine();
+                    }
+                }
+                merger.call(dst[key], src[key]);
+            }
+        }
+        return dst;
     }
 
     return Morphine;
