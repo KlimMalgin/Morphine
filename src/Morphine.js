@@ -191,11 +191,18 @@
      * @param {String} path Задает структуру объекта для построения
      * @param {*} value Значение последнего элемента в path
      **/
-    function builder (path, value) {
+    function builder (path, value, self) {
         var pathArray = path.split(CONFIG.separator),
-            intRegexp = /^[0-9]$/;
-            
-        innerBuilder.call(this, pathArray, value);
+            intRegexp = /^[0-9]$/,
+            morph = this;
+          
+        if (self) {
+            innerBuilder.call(morph, pathArray, value);
+        } else {
+            morph = new Morphine();
+            innerBuilder.call(morph, pathArray, value);
+            merger.call(this, morph);
+        }
             
         function innerBuilder (pathArray, value) {
             var index = pathArray.shift();
