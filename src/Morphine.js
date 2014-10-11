@@ -13,8 +13,22 @@
     }
 }(this, function (root) {
 
-    function Morphine(obj, value) {
-        MorphineBuilder.apply(this, arguments);
+    /**
+     * Конфигурационный объект для Morphine.
+     * Настраивается через Morphine.config
+     */
+    var CONFIG = {
+        
+        /**
+         * Разделительный символ, который будет использоваться в path.
+         * По умолчанию это точка.
+         */
+        separator: '.'
+        
+    };
+
+    function Morphine() {
+        return MorphineBuilder.apply(this, arguments);
     }
 
     function MorphineArray() {}
@@ -45,6 +59,7 @@
                 setter.apply(this, arguments);
             break;      
         }
+        return this;
     }
     
     var CommonPrototypeMixin = {
@@ -56,10 +71,15 @@
         },
         set: function (path, value) {
             setter.call(this, path, value);
+            return this;
         },
         get: function (path) {
-            var pathArray = path.split('.');
+            var pathArray = path.split(CONFIG.separator);
             return getter(pathArray, this);
+        },
+        config: function () {
+            Configure.apply(this, arguments);
+            return this;
         }
     };
     
@@ -70,7 +90,6 @@
      * Скопирует в прототип this все свойства объекта source
      * @param {Object} source объект с набором свойств для копирования
      **/
-    // TODO: Где используется mixin?
     Morphine.mixin = MorphineArray.mixin = function (source) {
         if (source) {
             for (var prop in source) {
@@ -82,6 +101,17 @@
 
     Morphine.mixin(CommonPrototypeMixin);
     MorphineArray.mixin(CommonPrototypeMixin);
+
+    /**
+     * @private
+     * Метод конфигурирует дальнейшую работу с объектом
+     * @param {Object} options Набор свойств для CONFIG-объекта
+     */
+    function Configure (options) {
+        if (checkType(options, Object)) {
+            CONFIG.separator = options.separator ? options.separator : CONFIG.separator;
+        }
+    }
 
     /**
      * @private
@@ -107,7 +137,7 @@
      * @param {*} value Значение последнего элемента в path
      **/
     function builder (path, value) {
-        var pathArray = path.split('.'),
+        var pathArray = path.split(CONFIG.separator),
             intRegexp = /^[0-9]$/;
             
         innerBuilder.call(this, pathArray, value);
