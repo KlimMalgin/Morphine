@@ -136,9 +136,18 @@
             Configure.apply(this, arguments);
             return this;
         },
-        
+        /**
+         * Сериализация Morphine-объекта в строку
+         * return {String} Строковое представление текущего экземпляра объекта
+         */
         stringify: function () {
             return stringifier.call(this);
+        },
+        /**
+         * Преобразование Morphine-объекта в plain-объект
+         */
+        plain: function () {
+            return JSON.parse(this.stringify());
         }
     };
     
