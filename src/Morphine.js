@@ -206,7 +206,7 @@
      **/
     function builder (path, value, self) {
         var pathArray = path.split(CONFIG.separator),
-            intRegexp = /^[0-9]$/,
+            intRegexp = /^[0-9]*$/,
             morph = this;
           
         if (self) {
