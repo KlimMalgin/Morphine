@@ -135,6 +135,10 @@
         config: function () {
             Configure.apply(this, arguments);
             return this;
+        },
+        
+        stringify: function () {
+            return stringifier.call(this);
         }
     };
     
@@ -348,8 +352,7 @@
             }
         }
         return morph;
-    }
-    
+    }    
     
     /**
      * @private
@@ -380,6 +383,75 @@
         }
         return dst;
     }
+    
+    
+    
+    function stringifier() {
+        var currentString = "";
+        if (this.isObject()) {
+            currentString = ObjectToString.call(this);
+        } else if (this.isArray()) {
+            currentString = ArrayToString.call(this);
+        }
+        
+        function ObjectToString () {
+            var obj = this;
+            var start = "{", end = "}",
+                result = [], item = "";
+            for (var key in obj) {
+                if (!obj.has(key)) continue;
+                item += "\"" + key + "\":";
+                if (obj[key].isObject && obj[key].isObject()) {
+                    item += ObjectToString.call(obj[key]);
+                } else
+                // TODO: Bug. Метод isArray() не доступен в прототипе.
+                if ((obj[key].isArray && obj[key].isArray()) || obj[key].constructor === Array) {
+                    item += ArrayToString.call(obj[key]);
+                } else
+                if (checkType(obj[key])) {
+                    if (checkType(obj[key], String)) {
+                        item += "\"" + obj[key] + "\"";
+                    } else {
+                        item += obj[key];
+                    }
+                } else
+                if (checkType(obj[key], Object) || checkType(obj[key], Array)) {
+                    item += JSON.stringify(obj[key]);
+                }
+                result.push(item);item = "";
+            }
+            return start + result.join(',') + end;
+        }
+
+        function ArrayToString () {
+            var obj = this;
+            var start = "[", end = "]",
+                result = [], item = "",
+                ln = obj.length;
+            for (var key = 0; key < ln; key++) {
+                if (!obj.has(key) || key === 'length') continue;
+                if (obj[key].isObject && obj[key].isObject()) {
+                    item += ObjectToString.call(obj[key]);
+                } else
+                if (obj[key].isArray && obj[key].isArray()) {
+                    item += ArrayToString.call(obj[key]);
+                } else
+                if (checkType(obj[key])) {
+                    item += obj[key];
+                } else
+                if (checkType(obj[key], Object) || checkType(obj[key], Array)) {
+                    item += JSON.stringify(obj[key]);
+                }
+                result.push(item);item = "";
+            }
+            return start + result.join(',') + end;
+        }
+        
+        return currentString;
+    }
+
+    
+
 
     return Morphine;
 }));
