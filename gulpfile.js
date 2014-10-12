@@ -11,7 +11,7 @@ var streamify = require('gulp-streamify');
 var uglify = require('gulp-uglifyjs');
 
 var src = {
-    index: ['./src/Morphine.js']
+    index: ['./Morphine.js']
 };
 
 var dest = {
