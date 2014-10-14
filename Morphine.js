@@ -225,6 +225,7 @@
     function checkType (real, expect) {
         expect = expect ? [expect] : [Boolean, String, Number];
         var ln = expect.length;
+        if (typeof real === 'undefined' || real === null) return true;
         for (var i = 0; i < ln; i++) {
             if (expect[i] === real || expect[i] === real.constructor) {
                 return true;
@@ -330,7 +331,8 @@
      * @return {Morphine} Получившийся объект
      **/
     function setter(path, value) {
-        var valToSet = (typeof value !== 'undefined') ? value : {},
+        //var valToSet = (typeof value !== 'undefined') ? value : {},
+        var valToSet = value,
             checkResult = checkType(valToSet),
             mObject = null;
 
@@ -372,8 +374,9 @@
             for (var key in obj) {
                 if (!obj.hasOwnProperty(key)) continue;
 
-                if (typeof obj[key] === 'undefined' || obj[key] === null) {
-                    continue;
+                if (obj.hasOwnProperty(key) && (typeof obj[key] === 'undefined' || obj[key] === null)) {
+                    //continue;
+                    valueSetter.call(morph, key, obj[key]);
                 } else if (checkType(obj[key], Object)) {
                     valueSetter.call(morph, key, toMorphine.call(morph, obj[key], Morphine));
                 } else if (checkType(obj[key], Array)) {
@@ -410,9 +413,11 @@
     function merger (src) {
         var dst = this;
         for (var key in src) {
-            if (!src.has(key) || src.isUndefined(key) || src.isNull(key)) continue;
-
-            if (checkType(src[key].constructor)) {
+            if (!src.has(key)) continue;
+            
+            if (src.has(key) && (src.isUndefined(key) || src.isNull(key))) {
+                dst[key] = src[key];
+            } else if (checkType(src[key].constructor)) {
                 dst[key] = src[key];
             } else {
                 if (!dst.has(key)) {
