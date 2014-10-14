@@ -159,9 +159,25 @@
         plain: function () {
             return JSON.parse(this.stringify());
         },
-        
+        /**
+         * Преобразует текущий экземпляр объекта в массив path-элементов
+         */
         toPaths: function () {
             return PathGenerator.call(this);
+        },
+        /**
+         * Удалит вложенный объект или значение по указанному path
+         */
+        remove: function (path) {
+            var pathArray = path.split(CONFIG.separator);
+            var target = pathArray.pop();
+            if (pathArray.length > 0) {
+                var morph = getter(pathArray, this);
+            } else {
+                var morph = this;
+            }
+            delete morph[target];
+            return this;
         }
     };
     
