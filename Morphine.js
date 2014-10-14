@@ -4,12 +4,12 @@
     // Backbone-style settings
     if (typeof define === 'function' && define.amd) {
         define(['exports'], function (exports) {
-            root.Morphine = factory(root/*, exports*/);
+            root.Morphine = factory(root);
         });
     } else if (typeof module !== 'undefined') {
-        module.exports = factory(root/*, exports*/);
+        module.exports = factory(root);
     } else {
-        root.Morphine = factory(root/*, {}*/);
+        root.Morphine = factory(root);
     }
 }(this, function (root) {
 
