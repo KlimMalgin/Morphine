@@ -27,6 +27,8 @@
         
     };
 
+    var intRegexp = /^[0-9]*$/;
+
     function Morphine() {
         return MorphineBuilder.apply(this, arguments);
     }
@@ -176,7 +178,11 @@
             } else {
                 var morph = this;
             }
-            delete morph[target];
+            if (morph.isArray() && intRegexp.test(target)) {
+                morph.splice(target, 1);
+            } else {
+                delete morph[target];
+            }
             return this;
         }
     };
@@ -236,7 +242,6 @@
      **/
     function builder (path, value, self) {
         var pathArray = path.split(CONFIG.separator),
-            intRegexp = /^[0-9]*$/,
             morph = this;
           
         if (self) {
