@@ -512,6 +512,8 @@
         function ObjectPathGenerator (prev_path, path_list) {
             var item = this;
             var path = "";
+            var valueByPath;
+            var pathObject;
             if (checkType(item)) {
                 // TODO: Значения и простые типы не добавляем
             } else
@@ -524,13 +526,21 @@
                     if (item.isObject && item.isObject()) {
                         // TODO: Повторяющаяся проверка. Нужно от нее избавиться
                         path = prev_path + ((prev_path.length && prev_path.length > 0) ? "." : "") + key;
-                        path_list.push(path);
+                        valueByPath = item[key];
+                        pathObject = {};
+                        pathObject['path'] = path;
+                        if (checkType(valueByPath)) { pathObject['value'] = valueByPath; }
+                        path_list.push(pathObject);
                         ObjectPathGenerator.call(item[key], path, path_list);
                     } else
                     if (item.isArray && item.isArray()) {
                         // TODO: Повторяющаяся проверка. Нужно от нее избавиться
                         path = prev_path + ((prev_path.length && prev_path.length > 0) ? "." : "") + key;
-                        path_list.push(path);
+                        valueByPath = item[key];
+                        pathObject = {};
+                        pathObject['path'] = path;
+                        if (checkType(valueByPath)) { pathObject['value'] = valueByPath; }
+                        path_list.push(pathObject);
                         ArrayPathGenerator.call(item[key], path, path_list);
                     }
                 }
@@ -540,6 +550,8 @@
         function ArrayPathGenerator (prev_path, path_list) {
             var item = this;
             var path = "";
+            var valueByPath;
+            var pathObject;
             if (checkType(item)) {
                 // TODO: Значения и простые типы не добавляем
             } else
@@ -552,14 +564,22 @@
                     if (item.isObject && item.isObject()) {
                         // TODO: Повторяющаяся проверка. Нужно от нее избавиться
                         path = prev_path + ((prev_path.length && prev_path.length > 0) ? "." : "") + key;
-                        path_list.push(path);
-                        path = ObjectPathGenerator.call(item[key], path, path_list);
+                        valueByPath = item[key];
+                        pathObject = {};
+                        pathObject['path'] = path;
+                        if (checkType(valueByPath)) { pathObject['value'] = valueByPath; }
+                        path_list.push(pathObject);
+                        ObjectPathGenerator.call(item[key], path, path_list);
                     } else
                     if (item.isArray && item.isArray()) {
                         // TODO: Повторяющаяся проверка. Нужно от нее избавиться
                         path = prev_path + ((prev_path.length && prev_path.length > 0) ? "." : "") + key;
-                        path_list.push(path);
-                        path = ArrayPathGenerator.call(item[key], path, path_list);
+                        valueByPath = item[key];
+                        pathObject = {};
+                        pathObject['path'] = path;
+                        if (checkType(valueByPath)) { pathObject['value'] = valueByPath; }
+                        path_list.push(pathObject);
+                        ArrayPathGenerator.call(item[key], path, path_list);
                     }
                 }
             }
