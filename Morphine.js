@@ -184,6 +184,13 @@
                 delete morph[target];
             }
             return this;
+        },
+        /**
+         * Очистит текущий экземпляр объекта
+         */
+        clear: function () {
+            Clear.call(this);
+            return this;
         }
     };
     
@@ -588,6 +595,12 @@
         return paths;
     }
 
+    function Clear () {
+        for (var key in this) {
+            if (!this.hasOwnProperty(key)) continue;
+            delete this[key];
+        }
+    }
 
     return Morphine;
 }));
