@@ -191,6 +191,13 @@
         clear: function () {
             Clear.call(this);
             return this;
+        },
+        /**
+         * Преобразует текущий экземпляр объекта в объект описаный
+         * переданным массивом path-элементов
+         */
+        buildFromPaths: function (paths) {
+            BuildFromPath.call(this, paths);
         }
     };
     
@@ -602,5 +609,13 @@
         }
     }
 
+    function BuildFromPath (paths) {
+        this.clear();
+        for (var key in paths) {
+            if (!paths.hasOwnProperty(key) || !('value' in paths[key])) continue;
+            this.set(paths[key].path, paths[key].value);
+        }
+    }
+    
     return Morphine;
 }));
