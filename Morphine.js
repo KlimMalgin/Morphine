@@ -519,85 +519,26 @@
 
     function PathGenerator () {
         var paths = [];
-        if (this.isObject()) {
-            ObjectPathGenerator.call(this, "", paths);
-        } else
-        if (this.isArray()) {
-            ArrayPathGenerator.call(this, "", paths);
-        }
-
-        // TODO: Методы ObjectPathGenerator и ArrayPathGenerator идентичны. Нужно их реорганизовать
-        function ObjectPathGenerator (prev_path, path_list) {
+        pathBuilder.call(this, "", paths);
+        
+        function pathBuilder (prev_path, path_list) {
             var item = this;
             var path = "";
             var valueByPath;
             var pathObject;
-            if (checkType(item)) {
-                // TODO: Значения и простые типы не добавляем
-            } else
-            if (item.isEmpty()) {
-                // TODO: Не ясно что добавлять в path
-            } else {
-                for (var key in item) {
-                    // TODO: Проверка key === "length" - это костыль. Нужно избавиться от свойства length в массиве
-                    if (!item.has(key) || key === "length") continue;
-                    if (item.isObject && item.isObject()) {
-                        // TODO: Повторяющаяся проверка. Нужно от нее избавиться
-                        path = prev_path + ((prev_path.length && prev_path.length > 0) ? "." : "") + key;
-                        valueByPath = item[key];
-                        pathObject = {};
-                        pathObject['path'] = path;
-                        if (checkType(valueByPath)) { pathObject['value'] = valueByPath; }
-                        path_list.push(pathObject);
-                        ObjectPathGenerator.call(item[key], path, path_list);
-                    } else
-                    if (item.isArray && item.isArray()) {
-                        // TODO: Повторяющаяся проверка. Нужно от нее избавиться
-                        path = prev_path + ((prev_path.length && prev_path.length > 0) ? "." : "") + key;
-                        valueByPath = item[key];
-                        pathObject = {};
-                        pathObject['path'] = path;
-                        if (checkType(valueByPath)) { pathObject['value'] = valueByPath; }
-                        path_list.push(pathObject);
-                        ArrayPathGenerator.call(item[key], path, path_list);
-                    }
-                }
-            }
-        }
 
-        function ArrayPathGenerator (prev_path, path_list) {
-            var item = this;
-            var path = "";
-            var valueByPath;
-            var pathObject;
-            if (checkType(item)) {
-                // TODO: Значения и простые типы не добавляем
-            } else
-            if (item.isEmpty()) {
-                // TODO: Не ясно что добавлять в path
-            } else {
+            if (!checkType(item)){
                 for (var key in item) {
                     // TODO: Проверка key === "length" - это костыль. Нужно избавиться от свойства length в массиве
                     if (!item.has(key) || key === "length") continue;
-                    if (item.isObject && item.isObject()) {
-                        // TODO: Повторяющаяся проверка. Нужно от нее избавиться
+                    if ((item.isObject && item.isObject()) || (item.isArray && item.isArray())) {
                         path = prev_path + ((prev_path.length && prev_path.length > 0) ? "." : "") + key;
                         valueByPath = item[key];
                         pathObject = {};
                         pathObject['path'] = path;
                         if (checkType(valueByPath)) { pathObject['value'] = valueByPath; }
                         path_list.push(pathObject);
-                        ObjectPathGenerator.call(item[key], path, path_list);
-                    } else
-                    if (item.isArray && item.isArray()) {
-                        // TODO: Повторяющаяся проверка. Нужно от нее избавиться
-                        path = prev_path + ((prev_path.length && prev_path.length > 0) ? "." : "") + key;
-                        valueByPath = item[key];
-                        pathObject = {};
-                        pathObject['path'] = path;
-                        if (checkType(valueByPath)) { pathObject['value'] = valueByPath; }
-                        path_list.push(pathObject);
-                        ArrayPathGenerator.call(item[key], path, path_list);
+                        pathBuilder.call(item[key], path, path_list);
                     }
                 }
             }
