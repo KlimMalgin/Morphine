@@ -286,9 +286,14 @@
                 if (index === '$') {
                     this.push(value);
                 } else if (intRegexp.test(index)) {
-                    if (typeof this[index] === 'undefined') {
+                    if (this.has(index) && typeof this[index] === 'undefined') {
                         // TODO: Заменить все console-выводы на исключения
-                        console.error("Элемент %o не существует", index);
+                        //console.error("Элемент %o не существует", index);
+                        this[index] = value;
+                    } else if (!this.has(index)) {
+                        this.push(value);
+                        // Проверка соответствия индексов при сборке объекта из path-массива
+                        if (this.length-1 != index) console.error("Несоответствие индекса созданного элемента ожидаемому индексу");
                     }
                 } else {
                     this[index] = value;
@@ -534,18 +539,18 @@
             var path = "";
             var valueByPath;
             var pathObject;
-            var postfix;
+            //var postfix;
 
             if (!checkType(item)){
                 for (var key in item) {
                     // TODO: Проверка key === "length" - это костыль. Нужно избавиться от свойства length в массиве
                     if (!item.has(key) || key === "length") continue;
                     if ((item.isObject && item.isObject()) || (item.isArray && item.isArray())) {
-                        postfix = checkType(item[key], MorphineArray) ? '.$' : '';
+                        //postfix = checkType(item[key], MorphineArray) ? '.$' : '';
                         path = prev_path + ((prev_path.length && prev_path.length > 0) ? "." : "") + key;
                         valueByPath = item[key];
                         pathObject = {};
-                        pathObject['path'] = path + postfix;
+                        pathObject['path'] = path;// + postfix;
                         if (checkType(valueByPath)) { pathObject['value'] = valueByPath; }
                         path_list.push(pathObject);
                         pathBuilder.call(item[key], path, path_list);
@@ -569,7 +574,9 @@
         for (var key in paths) {
             if (!paths.hasOwnProperty(key)) continue;   //  || !('value' in paths[key])
             //this.set(paths[key].path, paths[key].value);
-            builder.call(this, paths[key].path, paths[key].value, true);
+            if (!intRegexp.test(paths[key].path.split(CONFIG.separator).pop())) {
+                builder.call(this, paths[key].path, paths[key].value, true);
+            }
         }
     }
     
