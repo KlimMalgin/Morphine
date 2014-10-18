@@ -295,8 +295,10 @@
                             this[index] = (typeof this[index] !== 'undefined') ? this[index] : new MorphineArray();
                         }
                     } else if (testInt) {
-                        if (typeof this[index] === 'undefined') {
-                            console.error("Элемент %o не существует", index);
+                        if (intRegexp.test(index) || index === "$") {
+                            this.push(new MorphineArray())
+                        } else {
+                            this[index] = (typeof this[index] !== 'undefined') ? this[index] : new MorphineArray();
                         }
                     } else {
                         this[index] = (typeof this[index] !== 'undefined') ? this[index] : new MorphineArray();
@@ -614,8 +616,9 @@
     function BuildFromPath (paths) {
         this.clear();
         for (var key in paths) {
-            if (!paths.hasOwnProperty(key) || !('value' in paths[key])) continue;
-            this.set(paths[key].path, paths[key].value);
+            if (!paths.hasOwnProperty(key)) continue;   //  || !('value' in paths[key])
+            //this.set(paths[key].path, paths[key].value);
+            builder.call(this, paths[key].path, paths[key].value, true);
         }
     }
     
