@@ -534,16 +534,18 @@
             var path = "";
             var valueByPath;
             var pathObject;
+            var postfix;
 
             if (!checkType(item)){
                 for (var key in item) {
                     // TODO: Проверка key === "length" - это костыль. Нужно избавиться от свойства length в массиве
                     if (!item.has(key) || key === "length") continue;
                     if ((item.isObject && item.isObject()) || (item.isArray && item.isArray())) {
+                        postfix = checkType(item[key], MorphineArray) ? '.$' : '';
                         path = prev_path + ((prev_path.length && prev_path.length > 0) ? "." : "") + key;
                         valueByPath = item[key];
                         pathObject = {};
-                        pathObject['path'] = path;
+                        pathObject['path'] = path + postfix;
                         if (checkType(valueByPath)) { pathObject['value'] = valueByPath; }
                         path_list.push(pathObject);
                         pathBuilder.call(item[key], path, path_list);
