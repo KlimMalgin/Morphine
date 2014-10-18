@@ -239,7 +239,15 @@
     function checkType (real, expect) {
         expect = expect ? [expect] : [Boolean, String, Number];
         var ln = expect.length;
-        if (typeof real === 'undefined' || real === null) return true;
+        // Значения null и undefined воспринимать как простые типы
+        if (typeof real === 'undefined' || real === null) {
+            if (ln > 1) {
+                return true;
+            } else {
+                // TODO: Если в expect будет передан один из простых типов - вернем false и это будет неверно.
+                return false;
+            }
+        }
         for (var i = 0; i < ln; i++) {
             if (expect[i] === real || expect[i] === real.constructor) {
                 return true;
