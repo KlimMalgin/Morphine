@@ -127,7 +127,7 @@
          * @return {Morphine} Текущий экземпляр объекта
          */
         set: function (path, value) {
-            setter.call(this, path, value);
+            setter.call(this, path, value, true);
             return this;
         },
         /**
@@ -254,6 +254,7 @@
      * значение value - присвоит его последнему элементу.
      * @param {String} path Задает структуру объекта для построения
      * @param {*} value Значение последнего элемента в path
+     * @param {boolean} self Если true - добавит path и value в объект this. Если false - соберет path как отдельный объект и смерджит его с this
      **/
     function builder (path, value, self) {
         var pathArray = path.split(CONFIG.separator),
@@ -262,6 +263,7 @@
         if (self) {
             innerBuilder.call(morph, pathArray, value);
         } else {
+            // TODO: Возможно merge здесь не нужен. Проверить кейсы в коротых используется. Если кейс рабочий - описать его в тестах
             morph = new Morphine();
             innerBuilder.call(morph, pathArray, value);
             merger.call(this, morph);
@@ -290,7 +292,7 @@
                         if (index === "$") {
                             this.push(new MorphineArray());
                         } else {
-                            this[index] = new MorphineArray();
+                            this[index] = (typeof this[index] !== 'undefined') ? this[index] : new MorphineArray();
                         }
                     } else if (testInt) {
                         if (typeof this[index] === 'undefined') {
