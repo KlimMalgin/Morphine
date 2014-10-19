@@ -127,6 +127,9 @@
          * @return {Morphine} Текущий экземпляр объекта
          */
         set: function (path, value) {
+            if (arguments.length === 1) {
+                value = new Morphine();
+            }
             setter.call(this, path, value, true);
             return this;
         },
