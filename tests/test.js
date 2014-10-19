@@ -61,8 +61,17 @@ describe('checkType()', function () {
 
     });
 
-    /*describe('Проверка типа значений null и undefined', function () {
+    describe('Проверка типа значений null и undefined', function () {
         // null и undefined в контексте Morphine должны определяться как элементарные типы
-    });*/
+
+        it('Проверка типа для undefined', function () {
+            assert.equal(checkType(undefined), true, 'В контексте Morphine библиотеки undefined является простым типом');
+        });
+
+        it('Проверка типа для null', function () {
+            assert.equal(checkType(null), true, 'В контексте Morphine библиотеки null является простым типом');
+        });
+
+    });
 
 });
