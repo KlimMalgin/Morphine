@@ -576,10 +576,10 @@
     }
 
     function shareApi () {
-        global._shareApi = exports;
+        global.MorphineShareApi = exports;
         return null;
     }
 
     exports.Morphine = replaceGlobal();
 
-    exports._shareApi = shareApi();
+    exports.MorphineShareApi = shareApi();
