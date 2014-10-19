@@ -4,14 +4,13 @@
 'use strict';
 
 var gulp = require('gulp');
-var deamdify = require('deamdify');
 var source = require('vinyl-source-stream');
 var argv = require('yargs').argv;
 var streamify = require('gulp-streamify');
 var uglify = require('gulp-uglifyjs');
 
 var src = {
-    index: ['./Morphine.js']
+    index: ['./src/Morphine.dev.js']
 };
 
 var dest = {
@@ -19,38 +18,31 @@ var dest = {
     test: 'tests/'
 };
 
+var names = {
+    buildName: 'Morphine.js',
+    globalVar: 'Morphine'
+};
+
 var env = {
     production : argv.production || false
 };
 
-gulp.task('scripts', function() {
-
-    // Main entry point
-    return browserify(src.index, {
-        transform: [
-            'deamdify'
-        ],
-        insertGlobals : false, //!env.production,
-        debug : false   //!env.production
-    })
-        .bundle()
-        .pipe(source('app.js'))
-        .pipe(gulp.dest(dest.js))
-});
-
-gulp.task('min', function() {
+function morphineBuild (production) {
     return gulp.src(src.index)
-        .pipe(uglify('Morphine.min.js', {
+        .pipe(uglify(names.buildName, {
             mangle: false,
-            wrap: "Morphine",
-            exportAll: false
+            wrap: names.globalVar,
+            exportAll: !production
         }))
-        .pipe(gulp.dest(dest.js))
-        .pipe(gulp.dest(dest.test));
+        .pipe(gulp.dest(production ? dest.js : dest.test));
+}
+
+gulp.task('build', function() {
+    return morphineBuild(true);
 });
 
+gulp.task('test-build', function() {
+    return morphineBuild(false);
+});
 
-// The default task
-gulp.task('default', ['min']);
-
-gulp.task('build', ['min']);
+gulp.task('default', ['build', 'test-build']);
