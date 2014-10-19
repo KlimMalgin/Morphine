@@ -4,7 +4,7 @@ node_js:
 
 before_script:
   - npm install
-  - gulp min
+  - gulp test-build
 
 script:
   - mocha tests/test.js
