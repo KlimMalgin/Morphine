@@ -1,18 +1,5 @@
 'use strict';
 
-(function (root, factory) {
-    // Backbone-style settings
-    if (typeof define === 'function' && define.amd) {
-        define(['exports'], function (exports) {
-            root.Morphine = factory(root);
-        });
-    } else if (typeof module !== 'undefined') {
-        module.exports = factory(root);
-    } else {
-        root.Morphine = factory(root);
-    }
-}(this, function (root) {
-
     /**
      * Конфигурационный объект для Morphine.
      * Настраивается через Morphine.config
@@ -39,7 +26,7 @@
     MorphineArray.prototype.constructor = MorphineArray;
     
     Morphine.prototype.version = '0.0.9';
-    
+
     function MorphineBuilder () {
         var ln = arguments.length;
         
@@ -582,6 +569,17 @@
             }
         }
     }
-    
-    return Morphine;
-}));
+
+    function replaceGlobal () {
+        global.Morphine = Morphine;
+        return Morphine;
+    }
+
+    function shareApi () {
+        global._shareApi = exports;
+        return null;
+    }
+
+    exports.Morphine = replaceGlobal();
+
+    exports._shareApi = shareApi();

@@ -1,7 +1,7 @@
 
 
 var assert = require("assert");
-var Morphine = require("./Morphine.min");
+require("./Morphine.min");
 
 describe('Common tests', function () {
     it('New Morphine is Object', function () {

@@ -41,7 +41,9 @@ gulp.task('scripts', function() {
 gulp.task('min', function() {
     return gulp.src(src.index)
         .pipe(uglify('Morphine.min.js', {
-            mangle: false
+            mangle: false,
+            wrap: "Morphine",
+            exportAll: false
         }))
         .pipe(gulp.dest(dest.js))
         .pipe(gulp.dest(dest.test));
