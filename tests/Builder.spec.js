@@ -43,7 +43,7 @@ describe('Builder tests', function () {
                 }
             };
 
-            builder.call(morph, 'root.l1.$.value', 23);
+            builder.call(morph, 'root.l1.$.value', 23, true);
             assert.deepEqual(morph, expected, 'Morphine-сущность собранная из path "root.l1.$.value" и значением 23 совпадает с ожидаемым объектом.');
         });
 
