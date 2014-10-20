@@ -12,3 +12,4 @@ describe('Test availability', function () {
 
 
 require('./Common.spec');
+require('./Builder.spec');
