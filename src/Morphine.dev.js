@@ -88,12 +88,20 @@
         },
         /**
          * @public
-         * Проверит наличие свойства key в текущем объекте
-         * @param {String} key ключ элемента
+         * Проверит в текущем объекте наличие свойства key или структуры соответствующей пути указанном в key.
+         * @param {String} key ключ элемента или path
          * @return {Boolean} Результат проверки присутствия поля. true - присутствует, false - отсутствует.
          **/
         has: function (key) {
-            return this.hasOwnProperty(key);
+            var pathArray = path.split(CONFIG.separator);
+            if (pathArray.length === 1) {
+                return this.hasOwnProperty(key);
+            } else {
+                var lastItem = pathArray.pop(),
+                    checkObject = getter(pathArray, this);
+                return checkObject.hasOwnProperty && checkObject.hasOwnProperty(lastItem);
+            }
+            return false;
         },
         /**
          * Выполнит merge src c текущим объектом
