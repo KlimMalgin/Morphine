@@ -93,6 +93,11 @@
          * @return {Boolean} Результат проверки присутствия поля. true - присутствует, false - отсутствует.
          **/
         has: function (path) {
+            // TODO: path не гарантированно будет строкой. В случае работы с массивом - может прийти целочисленный индекс элемента массива
+            if (path.constructor === Number) {
+                return this.hasOwnProperty(path);
+            }
+
             var pathArray = path.split(CONFIG.separator);
             if (pathArray.length === 1) {
                 return this.hasOwnProperty(path);
