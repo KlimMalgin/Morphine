@@ -89,10 +89,10 @@
         /**
          * @public
          * Проверит в текущем объекте наличие свойства key или структуры соответствующей пути указанном в key.
-         * @param {String} key ключ элемента или path
+         * @param {String} path ключ элемента или path
          * @return {Boolean} Результат проверки присутствия поля. true - присутствует, false - отсутствует.
          **/
-        has: function (key) {
+        has: function (path) {
             var pathArray = path.split(CONFIG.separator);
             if (pathArray.length === 1) {
                 return this.hasOwnProperty(key);
