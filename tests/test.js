@@ -13,3 +13,4 @@ describe('Test availability', function () {
 
 require('./Common.spec');
 require('./Builder.spec');
+require('./PublicApi.spec');

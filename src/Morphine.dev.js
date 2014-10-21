@@ -191,8 +191,8 @@
         }
     };
     
-    var MorphinePrototypeMixin = {};
-    var MorphineArrayPrototypeMixin = {};
+    //var MorphinePrototypeMixin = {};
+    //var MorphineArrayPrototypeMixin = {};
 
     /**
      * Скопирует в прототип this все свойства объекта source
