@@ -10,6 +10,39 @@ require("./Morphine");
 describe('Public API tests', function () {
     //var PublicApi = MorphineShareApi.CommonPrototypeMixin;
 
+    
+    it('Morphine constructor', function () {
+        var morph = new Morphine({
+            myObject: {
+                start: {
+                    value: 'start object value'
+                },
+                end: {
+                    value: 'end object value'
+                }
+            },
+            myArray: [
+                {
+                    index: 0,
+                    value: 96
+                },
+                {
+                    index: 1,
+                    value: 'text value'
+                }
+            ]
+        });
+        assert.equal(morph.has('myObject.start.value'), true, 'Объект содержит структуру "myObject.start.value"');
+        assert.equal(morph.has('myObject.end.value'), true, 'Объект содержит структуру "myObject.end.value"');
+        
+        assert.equal(morph.has('myArray.0.index'), true, 'Объект содержит структуру "myArray.0.index"');
+        assert.equal(morph.has('myArray.0.value'), true, 'Объект содержит структуру "myArray.0.value"');
+        
+        assert.equal(morph.has('myArray.1.index'), true, 'Объект содержит структуру "myArray.1.index"');
+        assert.equal(morph.has('myArray.1.value'), true, 'Объект содержит структуру "myArray.1.value"');
+        
+    });
+
     it('isObject', function () {
         var morph = new Morphine();
         assert.equal(morph.isObject(), true, 'Вновь созданая Morphine-сущность является объектом.');
