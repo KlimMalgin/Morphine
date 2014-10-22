@@ -51,7 +51,7 @@ describe('Public API tests', function () {
             assert.equal(morph.get('myArray.1.index'), 1, 'Структура "myArray.1.index" соответствует ожидаемому значению');
             
             assert.equal(morph.has('myArray.1.value'), true, 'Объект содержит структуру "myArray.1.value"');
-            assert.equal(morph.has('myArray.1.value'), 'text value', 'Структура "myArray.1.value" соответствует ожидаемому значению');
+            assert.equal(morph.get('myArray.1.value'), 'text value', 'Структура "myArray.1.value" соответствует ожидаемому значению');
             
             assert.deepEqual(morph.plain(), source, 'Структура созданного Morphine-объекта соответствует исходной');
             
