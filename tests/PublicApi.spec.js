@@ -10,45 +10,59 @@ require("./Morphine");
 describe('Public API tests', function () {
     //var PublicApi = MorphineShareApi.CommonPrototypeMixin;
 
-    
-    it('Morphine constructor', function () {
-        var morph = new Morphine({
-            myObject: {
-                start: {
-                    value: 'start object value'
-                },
-                end: {
-                    value: 'end object value'
-                }
-            },
-            myArray: [
-                {
-                    index: 0,
-                    value: 96
-                },
-                {
-                    index: 1,
-                    value: 'text value'
-                }
-            ]
-        });
-        assert.equal(morph.has('myObject.start.value'), true, 'Объект содержит структуру "myObject.start.value"');
-        assert.equal(morph.get('myObject.start.value'), 'start object value', 'Структура "myObject.start.value" соответствует ожидаемому значению');
 
-        assert.equal(morph.has('myObject.end.value'), true, 'Объект содержит структуру "myObject.end.value"');
-        assert.equal(morph.get('myObject.end.value'), 'end object value', 'Структура "myObject.end.value" соответствует ожидаемому значению');
+    describe('Morphine constructor', function () {
         
-        assert.equal(morph.has('myArray.0.index'), true, 'Объект содержит структуру "myArray.0.index"');
-        assert.equal(morph.get('myArray.0.index'), 0, 'Структура "myArray.0.index" соответствует ожидаемому значению');
-        
-        assert.equal(morph.has('myArray.0.value'), true, 'Объект содержит структуру "myArray.0.value"');
-        assert.equal(morph.get('myArray.0.value'), 96, 'Структура "myArray.0.value" соответствует ожидаемому значению');
-        
-        assert.equal(morph.has('myArray.1.index'), true, 'Объект содержит структуру "myArray.1.index"');
-        assert.equal(morph.get('myArray.1.index'), 1, 'Структура "myArray.1.index" соответствует ожидаемому значению');
-        
-        assert.equal(morph.has('myArray.1.value'), true, 'Объект содержит структуру "myArray.1.value"');
-        assert.equal(morph.has('myArray.1.value'), 'text value', 'Структура "myArray.1.value" соответствует ожидаемому значению');
+        it('Create from object', function () {
+            var source = {
+                myObject: {
+                    start: {
+                        value: 'start object value'
+                    },
+                    end: {
+                        value: 'end object value'
+                    }
+                },
+                myArray: [
+                    {
+                        index: 0,
+                        value: 96
+                    },
+                    {
+                        index: 1,
+                        value: 'text value'
+                    }
+                ]
+            };
+            var morph = new Morphine(source);
+            assert.equal(morph.has('myObject.start.value'), true, 'Объект содержит структуру "myObject.start.value"');
+            assert.equal(morph.get('myObject.start.value'), 'start object value', 'Структура "myObject.start.value" соответствует ожидаемому значению');
+    
+            assert.equal(morph.has('myObject.end.value'), true, 'Объект содержит структуру "myObject.end.value"');
+            assert.equal(morph.get('myObject.end.value'), 'end object value', 'Структура "myObject.end.value" соответствует ожидаемому значению');
+            
+            assert.equal(morph.has('myArray.0.index'), true, 'Объект содержит структуру "myArray.0.index"');
+            assert.equal(morph.get('myArray.0.index'), 0, 'Структура "myArray.0.index" соответствует ожидаемому значению');
+            
+            assert.equal(morph.has('myArray.0.value'), true, 'Объект содержит структуру "myArray.0.value"');
+            assert.equal(morph.get('myArray.0.value'), 96, 'Структура "myArray.0.value" соответствует ожидаемому значению');
+            
+            assert.equal(morph.has('myArray.1.index'), true, 'Объект содержит структуру "myArray.1.index"');
+            assert.equal(morph.get('myArray.1.index'), 1, 'Структура "myArray.1.index" соответствует ожидаемому значению');
+            
+            assert.equal(morph.has('myArray.1.value'), true, 'Объект содержит структуру "myArray.1.value"');
+            assert.equal(morph.has('myArray.1.value'), 'text value', 'Структура "myArray.1.value" соответствует ожидаемому значению');
+            
+            assert.deepEqual(morph.plain(), source, 'Структура созданного Morphine-объекта соответствует исходной');
+            
+        });
+    
+        it('Create from path', function () {
+            var morph = new Morphine('root.level1.level2.$.value.innerValue', 44);
+            
+            assert.equal(morph.has('root.level1.level2.0.value.innerValue'), true, 'Объект содержит структуру "root.level1.level2.0.value.innerValue"');
+            assert.equal(morph.get('root.level1.level2.0.value.innerValue'), 44, 'Структура "root.level1.level2.0.value.innerValue" соответствует ожидаемому значению');
+        });    
         
     });
 
