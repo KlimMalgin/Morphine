@@ -145,15 +145,16 @@ describe('Public API tests', function () {
         morph.set('path.part.first', 'is first part');
         assert.equal(morph.has('path.part.first'), true, 'Объект содержит структуру "path.part.first"');
         assert.equal(morph.get('path.part.first'), 'is first part', 'Структура "path.part.first" ссылается на ожидаемое значение');
-            
     });
     
-    //get
-    /**
-     * Сконфигурирует текущий экземпляр объекта
-     * @param {Object} options объект опций для конфигурирования текущего экземпляра Morphine
-     * @return {Morphine} Текущий экземпляр объекта
-     */
+    // Символический тест. Просто чтобы был, т.к. get и без него повсеместно используется
+    it('get', function () {
+        var morph = new Morphine();
+            
+        morph.set('path.part.first', 'is first part');
+        assert.equal(morph.get('path.part.first'), 'is first part', 'Структура "path.part.first" ссылается на ожидаемое значение');
+    });
+    
     //config
     /**
      * Сериализация Morphine-объекта в строку
