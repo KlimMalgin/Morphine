@@ -139,25 +139,15 @@ describe('Public API tests', function () {
         });
     });
 
+    it('set', function () {
+        var morph = new Morphine();
+            
+        morph.set('path.part.first', 'is first part');
+        assert.equal(morph.has('path.part.first'), true, 'Объект содержит структуру "path.part.first"');
+        assert.equal(morph.get('path.part.first'), 'is first part', 'Структура "path.part.first" ссылается на ожидаемое значение');
+            
+    });
     
-
-    /**
-     * Выполнит merge src c текущим объектом
-     * @param {Any Object} src
-     */
-    //merge
-    /**
-     * Установит свойство по указанному path
-     * @param {String} path Путь по которому нужно установить значение
-     * @param {*} value значение для установки в объекте
-     * @return {Morphine} Текущий экземпляр объекта
-     */
-    //set
-    /**
-     * Вернет значение по указанному path
-     * @param {String} path путь по которому нужно получить значение
-     * @return {*} Значение расположенное по заданному пути
-     */
     //get
     /**
      * Сконфигурирует текущий экземпляр объекта
