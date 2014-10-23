@@ -107,6 +107,18 @@ describe('Public API tests', function () {
         assert.equal(morph.has('root.level1.level2'), true, 'Объект содержит вложенную структуру вида "root.level1.level2".');
     });
 
+    it('merge', function () {
+        var morph = new Morphine('root.level1.level2.$.val', 'some value');
+        var morph2 = new Morphine('root.level1_test', false);
+        
+        morph.merge(morph2);
+        
+        assert.equal(morph.has('root.level1.level2.0.val'), true, 'Объект содержит базовую структуру, по которой он был создан.');
+        assert.equal(morph.has('root.level1_test'), true, 'Объект содержит структуру, которая была добавлена через merge.');
+        assert.equal(morph.get('root.level1_test'), false, 'Значение структуры, добавленной через merge соответствует ожидаемому.');
+
+    });
+
     /**
      * Выполнит merge src c текущим объектом
      * @param {Any Object} src
