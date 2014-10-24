@@ -167,12 +167,34 @@ describe('Public API tests', function () {
         assert.equal(morph.get('path/part/first'), 'path with slash-separate', 'Распарсили строку с кастомным разделителем и успешно получили ожидаемое значение');
     });
     
-    //config
-    /**
-     * Сериализация Morphine-объекта в строку
-     * return {String} Строковое представление текущего экземпляра объекта
-     */
-    //stringify
+    it('stringify', function () {
+        var source = {
+            root: {
+                level1_test: false,
+                arr: [
+                    {
+                        val1: 'v1',
+                        val2: 'v2',
+                    },
+                    {
+                        bool: true
+                    },
+                    {
+                        num: 44
+                    }
+                ]
+            }
+        };
+        var morph = new Morphine(source);
+        
+        var morphStr = morph.stringify();
+        var plainStr = JSON.stringify(source);
+        
+        assert.equal(morphStr, plainStr, "Morphine-объект корректно преобразован в строку");
+        
+    });
+    
+    
     /**
      * Преобразование Morphine-объекта в plain-объект
      */
