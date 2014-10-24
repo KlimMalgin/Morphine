@@ -229,7 +229,7 @@
      */
     function Configure (options) {
         if (checkType(options, Object)) {
-            CONFIG.separator = options.separator ? options.separator : CONFIG.separator;
+            this.separator = options.separator ? options.separator : this.separator;
         }
     }
 
