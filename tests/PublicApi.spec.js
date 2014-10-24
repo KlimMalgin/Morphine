@@ -155,6 +155,18 @@ describe('Public API tests', function () {
         assert.equal(morph.get('path.part.first'), 'is first part', 'Структура "path.part.first" ссылается на ожидаемое значение');
     });
     
+    it('config', function () {
+        var morph = new Morphine();
+            
+        morph.config({
+            separator: "/"
+        });
+            
+        morph.set('path/part/first', 'path with slash-separate');
+        assert.equal(morph.has('path/part/first'), true, 'Разбор строки с кастомным разделителем происходит корректно');
+        assert.equal(morph.get('path/part/first'), 'path with slash-separate', 'Распарсили строку с кастомным разделителем и успешно получили ожидаемое значение');
+    });
+    
     //config
     /**
      * Сериализация Morphine-объекта в строку
