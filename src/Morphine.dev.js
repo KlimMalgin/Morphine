@@ -204,24 +204,23 @@
         }
     };
     
-    //var MorphinePrototypeMixin = {};
-    //var MorphineArrayPrototypeMixin = {};
-
     /**
-     * Скопирует в прототип this все свойства объекта source
-     * @param {Object} source объект с набором свойств для копирования
+     * Скопирует в прототип this все свойства переданных объектов
      **/
-    Morphine.mixin = MorphineArray.mixin = function (source) {
-        if (source) {
-            for (var prop in source) {
-                if (!source.hasOwnProperty(prop)) continue;
-                this.prototype[prop] = source[prop];
+    Morphine.mixin = MorphineArray.mixin = function () {
+        var ln = arguments.length;
+        for (var i = 0; i < ln; i++) {
+            if (checkType(arguments[i], Object)) {
+                for (var prop in arguments[i]) {
+                    if (!arguments[i].hasOwnProperty(prop)) continue;
+                    this.prototype[prop] = arguments[i][prop];
+                }
             }
         }
     };
 
-    Morphine.mixin(CommonPrototypeMixin);
-    MorphineArray.mixin(CommonPrototypeMixin);
+    Morphine.mixin(CommonPrototypeMixin, CONFIG);
+    MorphineArray.mixin(CommonPrototypeMixin, CONFIG);
 
     /**
      * @private
