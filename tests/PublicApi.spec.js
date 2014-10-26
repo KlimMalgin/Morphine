@@ -194,6 +194,30 @@ describe('Public API tests', function () {
         
     });
     
+    it('plain', function () {
+        var source = {
+            root: {
+                level1_test: false,
+                arr: [
+                    {
+                        val1: 'v1',
+                        val2: 'v2',
+                    },
+                    {
+                        bool: true
+                    },
+                    {
+                        num: 44
+                    }
+                ]
+            }
+        };
+        var morph = new Morphine(source);
+        var morphPlain = morph.plain();
+        
+        assert.equal(morphPlain, source, "Преобразование в Morphine и обратно прошло успешно");
+        
+    });
     
     /**
      * Преобразование Morphine-объекта в plain-объект
