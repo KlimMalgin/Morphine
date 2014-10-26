@@ -215,7 +215,7 @@ describe('Public API tests', function () {
         var morph = new Morphine(source);
         var morphPlain = morph.plain();
         
-        assert.equal(morphPlain, source, "Преобразование в Morphine и обратно прошло успешно");
+        assert.deepEqual(morphPlain, source, "Преобразование в Morphine и обратно прошло успешно");
         
     });
     
