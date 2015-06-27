@@ -14,3 +14,5 @@ describe('Test availability', function () {
 require('./utests/Common.spec');
 require('./utests/Builder.spec');
 require('./utests/PublicApi.spec');
+
+require('./itests/Collections.spec');
