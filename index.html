@@ -1,69 +1,228 @@
-<!doctype html>
+<!DOCTYPE html>
 <html>
   <head>
-    <meta charset="utf-8">
+    <meta charset='utf-8'>
     <meta http-equiv="X-UA-Compatible" content="chrome=1">
-    <title>Morphine by KlimMalgin</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link href='https://fonts.googleapis.com/css?family=Architects+Daughter' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/github-light.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print">
 
-    <link rel="stylesheet" href="stylesheets/styles.css">
-    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
-    <script src="javascripts/scale.fix.js"></script>
-    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
     <!--[if lt IE 9]>
     <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
+
+    <title>Morphine by KlimMalgin</title>
   </head>
+
   <body>
-    <div class="wrapper">
-      <header>
-        <h1 class="header">Morphine</h1>
-        <p class="header">Extended JavaScript collections</p>
+    <header>
+      <div class="inner">
+        <h1>Morphine</h1>
+        <h2>Extended JavaScript collections</h2>
+        <a href="https://github.com/KlimMalgin/Morphine" class="button"><small>View project on</small> GitHub</a>
+      </div>
+    </header>
 
-        <ul>
-          <li class="download"><a class="buttons" href="https://github.com/KlimMalgin/Morphine/zipball/master">Download ZIP</a></li>
-          <li class="download"><a class="buttons" href="https://github.com/KlimMalgin/Morphine/tarball/master">Download TAR</a></li>
-          <li><a class="buttons github" href="https://github.com/KlimMalgin/Morphine">View On GitHub</a></li>
-        </ul>
+    <div id="content-wrapper">
+      <div class="inner clearfix">
+        <section id="main-content">
+          <h1>
+<a id="morphine" class="anchor" href="#morphine" aria-hidden="true"><span class="octicon octicon-link"></span></a>Morphine</h1>
 
-        <p class="header">This project is maintained by <a class="header name" href="https://github.com/KlimMalgin">KlimMalgin</a></p>
-
-
-      </header>
-      <section>
-        <h1>
-<a name="examples" class="anchor" href="#examples"><span class="octicon octicon-link"></span></a>Examples</h1>
+<p>Extended JavaScript collections</p>
 
 <h3>
-<a name="build" class="anchor" href="#build"><span class="octicon octicon-link"></span></a>Build</h3>
+<a id="api" class="anchor" href="#api" aria-hidden="true"><span class="octicon octicon-link"></span></a>API</h3>
 
-<p>Example:</p>
+<blockquote>
+<p>{Morphine} config({Object} options) </p>
+</blockquote>
 
-<div class="highlight highlight-js"><pre><span class="nx">q</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Morphine</span><span class="p">();</span>
-<span class="nx">q</span><span class="p">.</span><span class="nx">build</span><span class="p">(</span><span class="s1">'base.firstField.collection.$.field'</span><span class="p">,</span> <span class="s1">'It\'s field value'</span><span class="p">);</span>
-</pre></div>
+<p>Сконфигурирует morphine в текущей сессии. Сейчас доступна только одна опция separator, которая хранит символ-разделитель для парсинга и генерации path.<br>
+<strong>return</strong> Текущий объект</p>
 
-<p>Result:</p>
+<blockquote>
+<p>{Boolean} isObject() </p>
+</blockquote>
 
-<div class="highlight highlight-js"><pre><span class="nx">Morphine</span> <span class="p">{</span><span class="err">…</span><span class="p">}</span>
-    <span class="nx">base</span><span class="o">:</span> <span class="nx">Morphine</span>
-        <span class="nx">firstField</span><span class="o">:</span> <span class="nx">Morphine</span>
-            <span class="nx">collection</span><span class="o">:</span> <span class="nx">MorphineArray</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
-                <span class="mi">0</span><span class="o">:</span> <span class="nx">Morphine</span>
-                    <span class="nx">field</span><span class="o">:</span> <span class="s2">"It's field value"</span>
-                    <span class="nx">__proto__</span><span class="o">:</span> <span class="nx">Morphine</span>
-                <span class="nx">length</span><span class="o">:</span> <span class="mi">1</span>
-            <span class="nx">__proto__</span><span class="o">:</span> <span class="nb">Array</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-        <span class="nx">__proto__</span><span class="o">:</span> <span class="nx">Morphine</span>
-    <span class="nx">__proto__</span><span class="o">:</span> <span class="nx">Morphine</span>
-<span class="nx">__proto__</span><span class="o">:</span> <span class="nx">Morphine</span>
-</pre></div>
-      </section>
-      <footer>
-        <p><small>Hosted on <a href="http://pages.github.com">GitHub Pages</a> using the Dinky theme</small></p>
-      </footer>
+<p>Проверяет, является ли текущая сущность Morphine-объектом<br>
+<strong>return</strong> true|false</p>
+
+<blockquote>
+<p>{Boolean} isArray() </p>
+</blockquote>
+
+<p>Проверяет, является ли текущая сущность Morphine-коллекцией<br>
+<strong>return</strong> true|false</p>
+
+<blockquote>
+<p>{Boolean} isNull({String} key) </p>
+</blockquote>
+
+<p>Проверит свойство key текущего объекта на null<br>
+<strong>return</strong> true|false</p>
+
+<blockquote>
+<p>{Boolean} isUndefined({String} key) </p>
+</blockquote>
+
+<p>Проверит, является ли свойство key - undefined<br>
+<strong>return</strong> true|false</p>
+
+<blockquote>
+<p>{Boolean} isEmpty() </p>
+</blockquote>
+
+<p>Проверит - является ли текущий объект пустым<br>
+<strong>return</strong> true|false</p>
+
+<blockquote>
+<p>{Boolean} has({String} path) </p>
+</blockquote>
+
+<p>Проверит наличие свойства path в текущем объекте или структуры соответствующей пути указанном в path<br>
+<strong>return</strong> true|false</p>
+
+<blockquote>
+<p>{Morphine} merge({Object} src) </p>
+</blockquote>
+
+<p>Выполнит merge src c текущим объектом<br>
+<strong>return</strong> Текущий объект, дополненный структурой из src</p>
+
+<blockquote>
+<p>{Morphine} set({String} path, {Any} value)<br>
+{Morphine} set({String} path) </p>
+</blockquote>
+
+<p>Установит свойство по указанному path. Value может быть любого типа и является опциональным. Если value не указано, то по пути path будет создан пустой объект.<br>
+<strong>return</strong> Текущий объект, дополненный структурой path: value</p>
+
+<blockquote>
+<p>{Any} get({String} path) </p>
+</blockquote>
+
+<p>Вернет значение по указанному path<br>
+<strong>return</strong> Значение по указанному path</p>
+
+<blockquote>
+<p>{String} stringify() </p>
+</blockquote>
+
+<p>Сериализует Morphine-объект в строку<br>
+<strong>return</strong> JSON-строка, представляющая текущий объект</p>
+
+<blockquote>
+<p>{Object} plain() </p>
+</blockquote>
+
+<p>Преобразует Morphine-объект в plain-объект<br>
+<strong>return</strong> plain-объект от текущего объекта</p>
+
+<blockquote>
+<p>{Array} toPaths() </p>
+</blockquote>
+
+<p>Преобразует текущий экземпляр объекта в массив path-элементов<br>
+<strong>return</strong> Массив path-элементов, соответствующий структуре текущего объекта</p>
+
+<blockquote>
+<p>{Morphine} remove({String} path) </p>
+</blockquote>
+
+<p>Удалит вложенный объект или значение по указанному path<br>
+<strong>return</strong> Текущий объект с удаленной path-ветвью</p>
+
+<blockquote>
+<p>{Morphine} clear() </p>
+</blockquote>
+
+<p>Очистит текущий экземпляр объекта<br>
+<strong>return</strong> Пустой morphine-объект</p>
+
+<blockquote>
+<p>{Morphine} buildFromPaths({Array} paths)   </p>
+</blockquote>
+
+<p>[not stable]<br>
+Преобразует текущий экземпляр объекта в объект описаный переданным массивом path-элементов.<br>
+<strong>return</strong> Текущий объект</p>
+
+<hr>
+
+<h1>
+<a id="examples" class="anchor" href="#examples" aria-hidden="true"><span class="octicon octicon-link"></span></a>Examples</h1>
+
+<h4>
+<a id="create-morphine" class="anchor" href="#create-morphine" aria-hidden="true"><span class="octicon octicon-link"></span></a>Create Morphine:</h4>
+
+<div class="highlight highlight-js"><pre><span class="pl-c">// Path only:</span>
+<span class="pl-k">var</span> m <span class="pl-k">=</span> <span class="pl-k">new</span> <span class="pl-en">Morphine</span>(<span class="pl-s"><span class="pl-pds">'</span>App.Collections.Users.$<span class="pl-pds">'</span></span>);
+<span class="pl-c">// result:</span>
+{
+    <span class="pl-s"><span class="pl-pds">"</span>App<span class="pl-pds">"</span></span><span class="pl-k">:</span>{
+        <span class="pl-s"><span class="pl-pds">"</span>Collections<span class="pl-pds">"</span></span><span class="pl-k">:</span>{
+            <span class="pl-s"><span class="pl-pds">"</span>Users<span class="pl-pds">"</span></span><span class="pl-k">:</span>[]
+        }
+    }
+}
+
+<span class="pl-c">// Path:object</span>
+<span class="pl-k">var</span> m <span class="pl-k">=</span> <span class="pl-k">new</span> <span class="pl-en">Morphine</span>(<span class="pl-s"><span class="pl-pds">'</span>App.SessionData<span class="pl-pds">'</span></span>, {
+    userName<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>Max<span class="pl-pds">'</span></span>,
+    age<span class="pl-k">:</span> <span class="pl-c1">22</span>,
+    phone<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>+1(234)567890<span class="pl-pds">'</span></span>
+});
+<span class="pl-c">// result:</span>
+{
+    <span class="pl-s"><span class="pl-pds">"</span>App<span class="pl-pds">"</span></span><span class="pl-k">:</span>{
+        <span class="pl-s"><span class="pl-pds">"</span>SessionData<span class="pl-pds">"</span></span><span class="pl-k">:</span>{
+            <span class="pl-s"><span class="pl-pds">"</span>userName<span class="pl-pds">"</span></span><span class="pl-k">:</span><span class="pl-s"><span class="pl-pds">"</span>Max<span class="pl-pds">"</span></span>,
+            <span class="pl-s"><span class="pl-pds">"</span>age<span class="pl-pds">"</span></span><span class="pl-k">:</span><span class="pl-c1">22</span>,
+            <span class="pl-s"><span class="pl-pds">"</span>phone<span class="pl-pds">"</span></span><span class="pl-k">:</span><span class="pl-s"><span class="pl-pds">"</span>+1(234)567890<span class="pl-pds">"</span></span>
+        }
+    }
+}
+
+<span class="pl-c">// Only object</span>
+<span class="pl-k">var</span> m <span class="pl-k">=</span> <span class="pl-k">new</span> <span class="pl-en">Morphine</span>({
+    userName<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>Max<span class="pl-pds">'</span></span>,
+    age<span class="pl-k">:</span> <span class="pl-c1">22</span>,
+    phone<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>+1(234)567890<span class="pl-pds">'</span></span>
+});
+<span class="pl-c">// result:</span>
+{
+    <span class="pl-s"><span class="pl-pds">"</span>userName<span class="pl-pds">"</span></span><span class="pl-k">:</span><span class="pl-s"><span class="pl-pds">"</span>Max<span class="pl-pds">"</span></span>,
+    <span class="pl-s"><span class="pl-pds">"</span>age<span class="pl-pds">"</span></span><span class="pl-k">:</span><span class="pl-c1">22</span>,
+    <span class="pl-s"><span class="pl-pds">"</span>phone<span class="pl-pds">"</span></span><span class="pl-k">:</span><span class="pl-s"><span class="pl-pds">"</span>+1(234)567890<span class="pl-pds">"</span></span>
+}
+
+<span class="pl-c">// Empty</span>
+<span class="pl-k">var</span> m <span class="pl-k">=</span> <span class="pl-k">new</span> <span class="pl-en">Morphine</span>();
+<span class="pl-c">// result:</span>
+{}</pre></div>
+        </section>
+
+        <aside id="sidebar">
+          <a href="https://github.com/KlimMalgin/Morphine/zipball/master" class="button">
+            <small>Download</small>
+            .zip file
+          </a>
+          <a href="https://github.com/KlimMalgin/Morphine/tarball/master" class="button">
+            <small>Download</small>
+            .tar.gz file
+          </a>
+
+          <p class="repo-owner"><a href="https://github.com/KlimMalgin/Morphine"></a> is maintained by <a href="https://github.com/KlimMalgin">KlimMalgin</a>.</p>
+
+          <p>This page was generated by <a href="https://pages.github.com">GitHub Pages</a> using the Architect theme by <a href="https://twitter.com/jasonlong">Jason Long</a>.</p>
+        </aside>
+      </div>
     </div>
-    <!--[if !IE]><script>fixScale(document);</script><![endif]-->
-		          <script type="text/javascript">
+
+            <script type="text/javascript">
             var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
             document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
           </script>
