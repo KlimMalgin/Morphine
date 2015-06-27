@@ -194,28 +194,98 @@ describe('Public API tests', function () {
         
     });
     
+    it('plain', function () {
+        var source = {
+            root: {
+                level1_test: false,
+                arr: [
+                    {
+                        val1: 'v1',
+                        val2: 'v2',
+                    },
+                    {
+                        bool: true
+                    },
+                    {
+                        num: 44
+                    }
+                ]
+            }
+        };
+        var morph = new Morphine(source);
+        var morphPlain = morph.plain();
+        
+        assert.deepEqual(morphPlain, source, "Преобразование в Morphine и обратно прошло успешно");
+        
+    });
     
-    /**
-     * Преобразование Morphine-объекта в plain-объект
-     */
-    //plain
+    it('remove', function () {
+        var source = {
+            root: {
+                level1_test: false,
+                arr: [
+                    {
+                        val1: 'v1',
+                        val2: 'v2',
+                    },
+                    {
+                        bool: true
+                    },
+                    {
+                        num: 44
+                    }
+                ]
+            }
+        };
+        var morph = new Morphine(source);
+        var testPath = 'root.arr.2.num';
+        
+        assert.equal(morph.has(testPath), true, 'Описанная структура testPath присутствует в объекте');
+        assert.equal(morph.get(testPath), 44, 'Проверка значения структуры testPath');
+        
+        morph.remove(testPath);
+        
+        assert.equal(morph.has(testPath), false, 'Структура testPath удалена из объекта');
+    });
+    
+    it('clear', function () {
+        var source = {
+            root: {
+                level1_test: false,
+                arr: [
+                    {
+                        val1: 'v1',
+                        val2: 'v2',
+                    },
+                    {
+                        bool: true
+                    },
+                    {
+                        num: 44
+                    }
+                ]
+            }
+        };
+        var morph = new Morphine(source);
+        var testPath = 'root.arr.2.num';
+        
+        assert.equal(morph.has(testPath), true, 'Описанная структура testPath присутствует в объекте');
+        assert.equal(morph.get(testPath), 44, 'Проверка значения структуры testPath');
+        
+        morph.clear();
+        
+        assert.equal(morph.isEmpty(), true, 'Объект очищен');
+    });
+    
+    
     /**
      * Преобразует текущий экземпляр объекта в массив path-элементов
      */
     //toPaths
     /**
-     * Удалит вложенный объект или значение по указанному path
-     */
-    //remove
-    /**
-     * Очистит текущий экземпляр объекта
-     */
-    //clear
-    /**
      * Преобразует текущий экземпляр объекта в объект описаный
      * переданным массивом path-элементов
      */
     //buildFromPaths
-
 
 });
