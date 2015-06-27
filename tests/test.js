@@ -11,6 +11,6 @@ describe('Test availability', function () {
 });
 
 
-require('./Common.spec');
-require('./Builder.spec');
-require('./PublicApi.spec');
+require('./utests/Common.spec');
+require('./utests/Builder.spec');
+require('./utests/PublicApi.spec');

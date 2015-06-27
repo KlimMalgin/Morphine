@@ -4,7 +4,7 @@
 'use strict';
 
 var assert = require("assert");
-require("./Morphine");
+require("../Morphine");
 
 
 describe('Builder tests', function () {

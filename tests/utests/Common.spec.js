@@ -5,7 +5,7 @@
 
 
 var assert = require("assert");
-require("./Morphine");
+require("../Morphine");
 
 
 describe('checkType()', function () {
