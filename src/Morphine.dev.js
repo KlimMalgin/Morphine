@@ -286,7 +286,7 @@
             
             if (pathArray.length === 0) {
                 if (index === '$') {
-                    this.push(value);
+                    //this.push(value);
                 } else if (intRegexp.test(index)) {
                     if (this.has(index) && typeof this[index] === 'undefined') {
                         // TODO: Заменить все console-выводы на исключения
@@ -305,7 +305,7 @@
                 if (testInt || testCollection) {
                     if (testCollection) {
                         if (index === "$") {
-                            this.push(new MorphineArray());
+                            //this.push(new MorphineArray());
                         } else {
                             this[index] = (typeof this[index] !== 'undefined') ? this[index] : new MorphineArray();
                         }
@@ -467,7 +467,7 @@
     }
     
     
-    
+    // TODO: Так выглядит Боль
     function stringifier() {
         var currentString = "";
         if (this.isObject()) {
