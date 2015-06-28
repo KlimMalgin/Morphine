@@ -25,4 +25,26 @@ describe('Collections tests', function () {
         assert.equal(mStr, expect, 'Пустая коллекция создана и преобразована в JSON-строку');
     });
 
+    it('Создаем пустой Morphine-объект, добавляем коллекцию, несколько элементов и проверяем длину', function () {
+        var morph = new Morphine();
+
+        morph.set('App.coll.pp.$', {data: 'somedata'});
+        morph.set('App.coll.pp.$', {data: 'somedata2'});
+
+        assert.equal(morph.get('App.coll.pp').isEmpty(), false, 'Коллекция не пустая');
+        assert.equal(morph.get('App.coll.pp.length'), 2, 'В коллекции два элемента');
+    });
+
+    it('Создаем пустую коллекцию через конструктор и добавляем элементы методом set', function () {
+        var morph = new Morphine('App.coll.pp.$');
+
+        morph.set('App.coll.pp.$', {data: 'somedata'});
+        morph.set('App.coll.pp.$', {data: 'somedata2'});
+
+        assert.equal(morph.get('App.coll.pp').isEmpty(), false, 'Коллекция не пустая');
+        assert.equal(morph.get('App.coll.pp.length'), 2, 'В коллекции два элемента');
+    });
+
+
+
 });
