@@ -8,7 +8,7 @@ describe('Collections tests', function () {
     
     it('Создаем коллекцию с одним элементом через через set', function () {
         var morph = new Morphine();
-        morph.set('App.coll.pp.$');
+        morph.set('App.coll.pp.$', {});
         assert.equal(morph.get('App.coll.pp').isEmpty(), false, 'Создана пустая коллекция');
     });
 
