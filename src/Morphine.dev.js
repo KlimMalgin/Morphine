@@ -264,29 +264,30 @@
      * значение value - присвоит его последнему элементу.
      * @param {String} path Задает структуру объекта для построения
      * @param {*} value Значение последнего элемента в path
-     * @param {boolean} self Если true - добавит path и value в объект this. Если false - соберет path как отдельный объект и смерджит его с this
+     * @param {boolean} self Если true - добавит path и value в объект this. Если false - добавит path в объект this
      **/
     function builder (path, value, self) {
         var pathArray = path.split(CONFIG.separator),
             morph = this;
-          
+
+        // TODO: WTF!!! Оба кейса одинаковые :) morph === this
         if (self) {
-            innerBuilder.call(morph, pathArray, value);
+        	innerBuilder.call(morph, pathArray, value);
         } else {
             // TODO: Возможно merge здесь не нужен. Проверить кейсы в коротых используется. Если кейс рабочий - описать его в тестах
-            morph = new Morphine();
-            innerBuilder.call(morph, pathArray, value);
-            merger.call(this, morph);
+            //morph = new Morphine();
+            innerBuilder.call(this, pathArray, value);
+            //merger.call(this, morph);
         }
             
         function innerBuilder (pathArray, value) {
             var index = pathArray.shift();
             var testInt = intRegexp.test(pathArray[0]);
             var testCollection = pathArray[0] === '$';
-            
+
             if (pathArray.length === 0) {
                 if (index === '$') {
-                    //this.push(value);
+            		!!value && this.push(value);
                 } else if (intRegexp.test(index)) {
                     if (this.has(index) && typeof this[index] === 'undefined') {
                         // TODO: Заменить все console-выводы на исключения
@@ -305,7 +306,7 @@
                 if (testInt || testCollection) {
                     if (testCollection) {
                         if (index === "$") {
-                            //this.push(new MorphineArray());
+                            this.push(new MorphineArray());
                         } else {
                             this[index] = (typeof this[index] !== 'undefined') ? this[index] : new MorphineArray();
                         }
@@ -327,7 +328,7 @@
                         this[index] = (typeof this[index] !== 'undefined') ? this[index] : new Morphine();
                     }
                 }  
-                
+
                 // Если в коллекцию $ был добавлен очередной элемент - получаем его индекс, для дальнейшего построения
                 if (index === '$') {
                     index = this.length-1;
