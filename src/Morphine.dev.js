@@ -10,26 +10,87 @@
          * Разделительный символ, который будет использоваться в path.
          * По умолчанию это точка.
          */
-        separator: '.'
-        
+        separator: '.',
+
+        /**
+         * Всплытие событий в Morhine-структуре
+         * true - включено
+         * false - выключено
+         */
+    	bubbleEvent: true
     };
 
     var intRegexp = /^[0-9]*$/;
 
     function Morphine() {
-        return MorphineBuilder.apply(this, arguments);
+        return MorphineBuilder.apply(MorphineCreator(), arguments);
     }
 
-    function MorphineArray() {}
-    MorphineArray.prototype = new Array();
+    function MorphineArray() {
+        return MorphineArrayCreator();
+    }
+
+    /*MorphineArray.prototype = new Array();
     MorphineArray.prototype = new MorphineArray();
-    MorphineArray.prototype.constructor = MorphineArray;
+    MorphineArray.prototype.constructor = MorphineArray;*/
     
     Morphine.prototype.version = '0.0.9';
+
+    function MorphineCreator () {
+    	var f = function () {},
+    		proto = new M();
+        
+        f.prototype = proto;
+        f.prototype.constructor = Morphine;
+
+        return new f;
+    }
+
+    function MorphineArrayCreator () {
+    	var f = function () {},
+    		proto = new MA();
+
+    		f.prototype = proto;
+    		f.prototype.constructor = MorphineArray;
+
+		return new f;
+    }
+
+    /**
+	 * Прототип для Morphine. Содержит служебные поля и методы
+     */
+    function M () {
+    	
+    	/**
+		 * Подписчики на Morphine-события
+    	 */
+    	this.__subscribes = {
+    		add: [],
+    		remove: [],
+    		change: [],
+    		all: []
+    	};
+
+    	return this;
+    }
+
+    /**
+	 * Прототип для MorphineArray. Содержит служебные поля и методы
+     */
+    function MA () {
+    	return this;
+    }
+
+    MA.prototype = new Array();
+    MA.prototype = new MA();
+    MA.prototype.constructor = MA;
 
     function MorphineBuilder () {
         var ln = arguments.length;
         
+        /*this.prototype = proto;
+        this.prototype.constructor = Morphine;*/
+
         switch (ln) {
             case 1:
                 // м.б. объект или path-строка
@@ -50,7 +111,7 @@
         }
         return this;
     }
-    
+
     var CommonPrototypeMixin = {
         isObject: function () {
             return this.constructor === Morphine;
@@ -183,6 +244,7 @@
             } else {
                 delete morph[target];
             }
+            this.emit.call(morph, 'remove', path);
             return this;
         },
         /**
@@ -200,11 +262,34 @@
             BuildFromPath.call(this, paths);
         }
     };
-    
+
+    var EventsPrototypeMixin = {
+
+		/**
+		 * Подпишет subfunc на событие eventType объекта this
+		 */
+		on: function (eventType, subfunc) {
+			this.__subscribes[eventType].push(subfunc);
+		}
+
+    };
+
+    /**
+	 * Сгенерирует событие eventType на объекте this
+     */
+	M.prototype.emit = MA.prototype.emit = function(eventType, path) {
+		var listeners = this.__subscribes[eventType],
+			ln = listeners ? listeners.length : 0;
+
+		for (var i = 0; i<ln; i++) {
+			listeners[i].call({}, path);
+		}
+	}
+
     /**
      * Скопирует в прототип this все свойства переданных объектов
      **/
-    Morphine.mixin = MorphineArray.mixin = function () {
+    M.mixin = MA.mixin = function () {
         var ln = arguments.length;
         for (var i = 0; i < ln; i++) {
             if (checkType(arguments[i], Object)) {
@@ -216,8 +301,8 @@
         }
     };
 
-    Morphine.mixin(CommonPrototypeMixin, CONFIG);
-    MorphineArray.mixin(CommonPrototypeMixin, CONFIG);
+    M.mixin(CommonPrototypeMixin, EventsPrototypeMixin, CONFIG);
+    MA.mixin(CommonPrototypeMixin, EventsPrototypeMixin, CONFIG);
 
     /**
      * @private
