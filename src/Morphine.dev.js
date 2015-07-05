@@ -110,6 +110,14 @@
     	return new Event(eventType, path);
     }
 
+    /**
+	 * Эмитирует заданное событие и событие all
+     */
+    function Emitter (eventType, path) {
+    	this.emit(eventType, EventCreator(eventType, path));
+        this.emit('all', EventCreator(eventType, path));
+    }
+
     function MorphineBuilder () {
         var ln = arguments.length;
         
@@ -376,6 +384,7 @@
      **/
     function builder (path, value, self) {
         var pathArray = path.split(CONFIG.separator),
+        	currentLevel = [],
             morph = this;
 
         // TODO: WTF!!! Оба кейса одинаковые :) morph === this
@@ -392,22 +401,33 @@
             var index = pathArray.shift();
             var testInt = intRegexp.test(pathArray[0]);
             var testCollection = pathArray[0] === '$';
+            var eventType = '',
+            	isChange = false;
+
+            currentLevel.push(index);
 
             if (pathArray.length === 0) {
                 if (index === '$') {
-            		!!value && this.push(value);
+            		if (value) {
+            			this.push(value);
+            			Emitter.call(this, 'add', path);
+            		}
                 } else if (intRegexp.test(index)) {
                     if (this.has(index) && typeof this[index] === 'undefined') {
                         // TODO: Заменить все console-выводы на исключения
                         //console.error("Элемент %o не существует", index);
                         this[index] = value;
+            			Emitter.call(this, 'change', path);
                     } else if (!this.has(index)) {
                         this.push(value);
+            			Emitter.call(this, 'add', path);
                         // Проверка соответствия индексов при сборке объекта из path-массива
                         if (this.length-1 != index) console.error("Несоответствие индекса созданного элемента ожидаемому индексу");
                     }
                 } else {
+                    eventType = typeof this[index] !== 'undefined' ? 'change' : 'add';
                     this[index] = value;
+                    Emitter.call(this, eventType, path);
                 }
                 return;
             } else {
@@ -415,25 +435,43 @@
                     if (testCollection) {
                         if (index === "$") {
                             this.push(new MorphineArray());
+                            Emitter.call(this, 'add', currentLevel.join(CONFIG.separator));
                         } else {
-                            this[index] = (typeof this[index] !== 'undefined') ? this[index] : new MorphineArray();
+                        	isChange = typeof this[index] !== 'undefined';
+                        	eventType = isChange ? 'change' : 'add';
+                            this[index] = isChange ? this[index] : new MorphineArray();
+                            Emitter.call(this, eventType, currentLevel.join(CONFIG.separator));
                         }
                     } else if (testInt) {
                         if (intRegexp.test(index) || index === "$") {
-                            this.push(new MorphineArray())
+                            this.push(new MorphineArray());
+                            Emitter.call(this, 'add', currentLevel.join(CONFIG.separator));
                         } else {
-                            this[index] = (typeof this[index] !== 'undefined') ? this[index] : new MorphineArray();
+                        	isChange = typeof this[index] !== 'undefined';
+                        	eventType = isChange ? 'change' : 'add';
+                            this[index] = isChange ? this[index] : new MorphineArray();
+                            Emitter.call(this, eventType, currentLevel.join(CONFIG.separator));
                         }
                     } else {
-                        this[index] = (typeof this[index] !== 'undefined') ? this[index] : new MorphineArray();
+                        isChange = typeof this[index] !== 'undefined';
+                    	eventType = isChange ? 'change' : 'add';
+                        this[index] = isChange ? this[index] : new MorphineArray();
+                        Emitter.call(this, eventType, currentLevel.join(CONFIG.separator));
                     }
                 } else {
                     if (intRegexp.test(index)) {
-                        this[index] = (typeof this[index] !== 'undefined') ? this[index] : new Morphine();
+                        isChange = typeof this[index] !== 'undefined';
+                    	eventType = isChange ? 'change' : 'add';
+                        this[index] = isChange ? this[index] : new Morphine();
+                        Emitter.call(this, eventType, currentLevel.join(CONFIG.separator));
                     } else if (index === '$') {
                         this.push(new Morphine());
+                        Emitter.call(this, 'add', currentLevel.join(CONFIG.separator));
                     } else {
-                        this[index] = (typeof this[index] !== 'undefined') ? this[index] : new Morphine();
+                        isChange = typeof this[index] !== 'undefined';
+                    	eventType = isChange ? 'change' : 'add';
+                        this[index] = isChange ? this[index] : new Morphine();
+                        Emitter.call(this, eventType, currentLevel.join(CONFIG.separator));
                     }
                 }  
 
