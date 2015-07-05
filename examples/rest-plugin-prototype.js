@@ -47,6 +47,10 @@ Morphine.rest({
 
 			// "/users/{userId}/edit"
 			edit: {
+
+				// @optional
+				url: '/edit',
+
 				type: 'POST',
 
 				before: function () {  },
@@ -69,3 +73,9 @@ Morphine.rest({
 	common: {}
 
 });
+
+
+// Примеры обращения к rest через Morphine rest api
+Morphine.rest.users.get(/* userId or users filter */).then(/*...*/);
+
+Morphine.rest.users.edit.post(/* user data */).then(/*...*/);
