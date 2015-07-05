@@ -113,6 +113,7 @@
     /**
 	 * Эмитирует заданное событие и событие all
      */
+    // TODO: Для add и change передавать название добавленного/измененного поля.
     function Emitter (eventType, path) {
     	this.emit(eventType, EventCreator(eventType, path));
         this.emit('all', EventCreator(eventType, path));
