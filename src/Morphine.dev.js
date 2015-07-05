@@ -60,7 +60,6 @@
 	 * Прототип для Morphine. Содержит служебные поля и методы
      */
     function M () {
-    	
     	/**
 		 * Подписчики на Morphine-события
     	 */
@@ -78,12 +77,38 @@
 	 * Прототип для MorphineArray. Содержит служебные поля и методы
      */
     function MA () {
+		/**
+		 * Подписчики на Morphine-события
+    	 */
+    	this.__subscribes = {
+    		add: [],
+    		remove: [],
+    		change: [],
+    		all: []
+    	};
+
     	return this;
     }
 
     MA.prototype = new Array();
     MA.prototype = new MA();
     MA.prototype.constructor = MA;
+
+
+	function Event (eventType, path) {
+		/*stopPropagation: function () {...},*/
+    	this.type = eventType;
+    	this.path = path;
+		
+		return this;
+	}
+
+    /**
+	 * Создает объект события, которое будет эмиторивано внутри Morphine-структуры
+     */
+    function EventCreator (eventType, path) {
+    	return new Event(eventType, path);
+    }
 
     function MorphineBuilder () {
         var ln = arguments.length;
@@ -244,7 +269,8 @@
             } else {
                 delete morph[target];
             }
-            this.emit.call(morph, 'remove', path);
+            this.emit.call(morph, 'remove', EventCreator('remove', path));
+            this.emit.call(morph, 'all', EventCreator('remove', path));
             return this;
         },
         /**
