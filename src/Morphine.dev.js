@@ -67,7 +67,8 @@
     		add: [],
     		remove: [],
     		change: [],
-    		all: []
+    		all: [],
+    		bubble: []
     	};
 
     	return this;
@@ -84,7 +85,8 @@
     		add: [],
     		remove: [],
     		change: [],
-    		all: []
+    		all: [],
+    		bubble: []
     	};
 
     	return this;
@@ -95,10 +97,11 @@
     MA.prototype.constructor = MA;
 
 
-	function Event (eventType, path) {
+	function Event (eventType, path, fieldName) {
 		/*stopPropagation: function () {...},*/
     	this.type = eventType;
     	this.path = path;
+    	this.fieldName = fieldName;
 		
 		return this;
 	}
@@ -106,17 +109,18 @@
     /**
 	 * Создает объект события, которое будет эмиторивано внутри Morphine-структуры
      */
-    function EventCreator (eventType, path) {
-    	return new Event(eventType, path);
+    function EventCreator (eventType, path, fieldName) {
+    	return new Event(eventType, path, fieldName);
     }
 
     /**
 	 * Эмитирует заданное событие и событие all
      */
     // TODO: Для add и change передавать название добавленного/измененного поля.
-    function Emitter (eventType, path) {
-    	this.emit(eventType, EventCreator(eventType, path));
-        this.emit('all', EventCreator(eventType, path));
+    function Emitter (eventType, path, fieldName) {
+    	this.emit(eventType, EventCreator(eventType, path, fieldName));
+        this.emit('all', EventCreator(eventType, path, fieldName));
+        this.emit('bubble', EventCreator(eventType, path, fieldName));
     }
 
     function MorphineBuilder () {
@@ -280,6 +284,7 @@
             }
             this.emit.call(morph, 'remove', EventCreator('remove', path));
             this.emit.call(morph, 'all', EventCreator('remove', path));
+            this.emit.call(morph, 'bubble', EventCreator('remove', path, fieldName));
             return this;
         },
         /**
