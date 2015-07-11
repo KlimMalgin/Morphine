@@ -284,7 +284,7 @@
             }
             this.emit.call(morph, 'remove', EventCreator('remove', path));
             this.emit.call(morph, 'all', EventCreator('remove', path));
-            this.emit.call(morph, 'bubble', EventCreator('remove', path, fieldName));
+            this.emit.call(morph, 'bubble', EventCreator('remove', path, target));
             return this;
         },
         /**
