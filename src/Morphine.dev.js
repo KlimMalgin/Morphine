@@ -68,18 +68,29 @@
 	 * Прототип для Morphine. Содержит служебные поля и методы
      */
     function M (bubbler) {
+    	var parent = this;
     	/**
 		 * Подписчики на Morphine-события
     	 */
     	this.__subscribes = {
-    		add: [],
-    		remove: [],
-    		change: [],
-    		all: [],
-    		bubble: []
+    		add: [], remove: [], change: [], all: []
     	};
 
-    	this.bubbleHandler = bubbler;
+    	/*this.__bubble = {
+    		add: [], remove: [], change: [], all: []
+    	};*/
+
+    	this.bubbleHandler = function (event) {
+    		// Генерируем событие пришедшее от дочернего элемента на текущем объекте
+    		parent.emit(event.type, event);
+    		// Передаем событие следующему родителю
+    		parent.parentBubbleHandler(event);
+    	};
+		this.parentBubbleHandler = function(){};
+
+		this.setParentBubbleHandler = function(parentBubbleHandler) {
+			parent.parentBubbleHandler = parentBubbleHandler;
+		};
 
     	return this;
     }
@@ -88,18 +99,30 @@
 	 * Прототип для MorphineArray. Содержит служебные поля и методы
      */
     function MA (bubbler) {
+		var parent = this;
 		/**
 		 * Подписчики на Morphine-события
     	 */
     	this.__subscribes = {
-    		add: [],
-    		remove: [],
-    		change: [],
-    		all: [],
-    		bubble: []
+    		add: [], remove: [], change: [], all: []
     	};
 
-    	this.bubbleHandler = bubbler;
+    	/*this.__bubble = {
+    		add: [], remove: [], change: [], all: []
+    	};*/
+
+    	this.bubbleHandler = function (event) {
+    		// Генерируем событие пришедшее от дочернего элемента на текущем объекте
+    		parent.emit(event.type, event);
+    		parent.emit('all', event);
+    		// Передаем событие следующему родителю
+    		parent.parentBubbleHandler(event);
+    	};
+		this.parentBubbleHandler = function(){};
+
+		this.setParentBubbleHandler = function(parentBubbleHandler) {
+			parent.parentBubbleHandler = parentBubbleHandler;
+		};
 
     	return this;
     }
@@ -132,16 +155,12 @@
     function EventEmitter (eventType, path, fieldName) {
     	this.emit(eventType, EventCreator(eventType, path, fieldName));
         this.emit('all', EventCreator(eventType, path, fieldName));
-        //this.emit('bubble', EventCreator(eventType, path, fieldName));
         this.emitBubble(EventCreator(eventType, path, fieldName));
     }
 
     function MorphineBuilder () {
         var ln = arguments.length;
         
-        /*this.prototype = proto;
-        this.prototype.constructor = Morphine;*/
-
         switch (ln) {
             case 1:
                 // м.б. объект или path-строка
@@ -295,9 +314,9 @@
             } else {
                 delete morph[target];
             }
-            this.emit.call(morph, 'remove', EventCreator('remove', path));
-            this.emit.call(morph, 'all', EventCreator('remove', path));
-            this.emit.call(morph, 'bubble', EventCreator('remove', path, target));
+            this.emit.call(morph, 'remove', EventCreator('remove', path, target));
+            this.emit.call(morph, 'all', EventCreator('remove', path, target));
+            this.emitBubble.call(morph, EventCreator('remove', path, target));
             return this;
         },
         /**
@@ -316,6 +335,8 @@
         }
     };
 
+
+    // TODO: методы on, emit, emitBubble примешивать в прототип через mixin()
     var EventsPrototypeMixin = {
 
 		/**
@@ -330,12 +351,12 @@
     /**
 	 * Сгенерирует событие eventType на объекте this
      */
-	M.prototype.emit = MA.prototype.emit = function(eventType, path) {
+	M.prototype.emit = MA.prototype.emit = function(eventType, event) {
 		var listeners = this.__subscribes[eventType],
 			ln = listeners ? listeners.length : 0;
 
 		for (var i = 0; i<ln; i++) {
-			listeners[i].call({}, path);
+			listeners[i].call({}, event);
 		}
 	};
 
@@ -343,8 +364,12 @@
 	 * Сгенерирует всплывающее событие на объекте this
      */
 	M.prototype.emitBubble = MA.prototype.emitBubble = function(event) {
-		if (this.bubbleHandler) { this.bubbleHandler(event); }
+		if (this.parentBubbleHandler) { this.parentBubbleHandler(event); }
 	};
+
+	/*M.prototype.setParentBubbleHandler = MA.prototype.setParentBubbleHandler = function(parentBubbleHandler) {
+		this.parentBubbleHandler = parentBubbleHandler;
+	};*/
 
     /**
      * Скопирует в прототип this все свойства переданных объектов
@@ -427,7 +452,8 @@
             var index = pathArray.shift();
             var testInt = intRegexp.test(pathArray[0]);
             var testCollection = pathArray[0] === '$';
-            var eventType = '',
+            var tmpObject = null,
+            	eventType = '',
             	isChange = false;
 
             currentLevel.push(index);
@@ -435,24 +461,25 @@
             if (pathArray.length === 0) {
                 if (index === '$') {
             		if (value) {
-            			this.push(value);
+            			//this.push(value);
+            			this.push(isMorphine(value) ? newObjectPrepare.call(this, value) : value);
             			EventEmitter.call(this, 'add', path, index);
             		}
                 } else if (intRegexp.test(index)) {
                     if (this.has(index) && typeof this[index] === 'undefined') {
                         // TODO: Заменить все console-выводы на исключения
                         //console.error("Элемент %o не существует", index);
-                        this[index] = value;
+                        this[index] = isMorphine(value) ? newObjectPrepare.call(this, value) : value;
             			EventEmitter.call(this, 'change', path, index);
                     } else if (!this.has(index)) {
-                        this.push(value);
+                        this.push(isMorphine(value) ? newObjectPrepare.call(this, value) : value);
             			EventEmitter.call(this, 'add', path, index);
                         // Проверка соответствия индексов при сборке объекта из path-массива
                         if (this.length-1 != index) console.error("Несоответствие индекса созданного элемента ожидаемому индексу");
                     }
                 } else {
                     eventType = typeof this[index] !== 'undefined' ? 'change' : 'add';
-                    this[index] = value;
+                    this[index] = isMorphine(value) ? newObjectPrepare.call(this, value) : value;
                     EventEmitter.call(this, eventType, path, index);
                 }
                 return;
@@ -460,43 +487,64 @@
                 if (testInt || testCollection) {
                     if (testCollection) {
                         if (index === "$") {
-                            this.push(new MorphineArray());
+                            this.push(newObjectPrepare.call(this, new MorphineArray()));
                             EventEmitter.call(this, 'add', currentLevel.join(CONFIG.separator), index);
                         } else {
                         	isChange = typeof this[index] !== 'undefined';
                         	eventType = isChange ? 'change' : 'add';
-                            this[index] = isChange ? this[index] : new MorphineArray();
+                        	if (isChange) {
+                        		this[index] = this[index];
+                        	} else {
+                        		this[index] = newObjectPrepare.call(this, new MorphineArray());
+                        	}
+                            //this[index] = isChange ? this[index] : new MorphineArray();
                             EventEmitter.call(this, eventType, currentLevel.join(CONFIG.separator), index);
                         }
                     } else if (testInt) {
                         if (intRegexp.test(index) || index === "$") {
-                            this.push(new MorphineArray());
+                            this.push(newObjectPrepare.call(this, new MorphineArray()));
                             EventEmitter.call(this, 'add', currentLevel.join(CONFIG.separator), index);
                         } else {
                         	isChange = typeof this[index] !== 'undefined';
                         	eventType = isChange ? 'change' : 'add';
-                            this[index] = isChange ? this[index] : new MorphineArray();
+                            if (isChange) {
+								this[index] = this[index];
+                        	} else {
+                        		this[index] = newObjectPrepare.call(this, new MorphineArray());
+                        	}
                             EventEmitter.call(this, eventType, currentLevel.join(CONFIG.separator), index);
                         }
                     } else {
                         isChange = typeof this[index] !== 'undefined';
                     	eventType = isChange ? 'change' : 'add';
-                        this[index] = isChange ? this[index] : new MorphineArray();
+                        if (isChange) {
+							this[index] = this[index];
+                    	} else {
+                    		this[index] = newObjectPrepare.call(this, new MorphineArray());
+                    	}
                         EventEmitter.call(this, eventType, currentLevel.join(CONFIG.separator), index);
                     }
                 } else {
                     if (intRegexp.test(index)) {
                         isChange = typeof this[index] !== 'undefined';
                     	eventType = isChange ? 'change' : 'add';
-                        this[index] = isChange ? this[index] : new Morphine();
+                        if (isChange) {
+							this[index] = this[index];
+                    	} else {
+                    		this[index] = newObjectPrepare.call(this, new Morphine());
+                    	}
                         EventEmitter.call(this, eventType, currentLevel.join(CONFIG.separator), index);
                     } else if (index === '$') {
-                        this.push(new Morphine());
+                        this.push(newObjectPrepare.call(this, new Morphine()));
                         EventEmitter.call(this, 'add', currentLevel.join(CONFIG.separator), index);
                     } else {
                         isChange = typeof this[index] !== 'undefined';
                     	eventType = isChange ? 'change' : 'add';
-                        this[index] = isChange ? this[index] : new Morphine();
+                        if (isChange) {
+							this[index] = this[index];
+                    	} else {
+                    		this[index] = newObjectPrepare.call(this, new Morphine());
+                    	}
                         EventEmitter.call(this, eventType, currentLevel.join(CONFIG.separator), index);
                     }
                 }  
@@ -509,6 +557,21 @@
             
             innerBuilder.call(this[index], pathArray, value);
         }
+    }
+
+    /**
+     * Подготовит вновь созданный объект к работе
+     **/
+    function newObjectPrepare (obj) {
+    	obj.setParentBubbleHandler(this.bubbleHandler);
+    	return obj;
+    }
+
+    function isMorphine (obj) {
+    	if (checkType(obj, Morphine) || checkType(obj, MorphineArray)) {
+            return true;
+        }
+        return false;
     }
 
     /**

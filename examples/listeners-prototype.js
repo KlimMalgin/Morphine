@@ -28,6 +28,11 @@ BubbleEmitter инициирует вызов BubbleHandler'a. Все.
 
 Объект события должен быть самостоятельной сущностью. Должна быть возможность реализовать api событий
 
+---
+Bubble-события ловить только если подписка осуществлялась следующим способом:
+morph.get('App.collections').on('change', 'App.collections.data', function (e) {  }); // Ловим всплывающие события с App.collections.data
+morph.get('App.collections').on('change', '*', function (e) {  }); // Ловим всплывающие события со всех вложенных объектов
+
 
 
 */
