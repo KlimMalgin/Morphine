@@ -17,10 +17,22 @@ require("../Morphine");
 
 describe('Listeners tests', function () {
     
-    it('Пустой тест', function () {
-        var morph = new Morphine();
-        assert.equal(true, false, 'Пустой тест');
-    });
+    describe('Событие add', function () {
 
+        it('Добавление объекта в пустой объект', function (cb) {
+            var morph = new Morphine();
+
+            morph.on('add', function (e) {
+                // Event {type: "add", path: "Application", fieldName: "Application"}
+                assert.equal(e.type, 'add', 'Тип события: add');
+                assert.equal(e.path, 'Application', 'Path == Application');
+                assert.equal(e.fieldName, 'Application', 'fieldName == Application');
+                cb();
+            });
+
+            morph.set('Application');
+        });
+
+    });
 
 });
