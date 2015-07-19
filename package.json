@@ -13,6 +13,7 @@
   ],
   "main": "Morphine.js",
   "devDependencies": {
+    "chai": "^3.1.0",
     "deamdify": "^0.1.1",
     "exec": "^0.2.0",
     "gulp": "~3.8.7",
@@ -20,6 +21,7 @@
     "gulp-streamify": "~0.0.5",
     "gulp-uglifyjs": "~0.4.2",
     "mocha": "^1.21.5",
+    "sinon": "^1.15.4",
     "vinyl-source-stream": "^1.0.0",
     "yargs": "~1.3.1"
   },

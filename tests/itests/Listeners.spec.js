@@ -1,6 +1,9 @@
 'use strict';
 
 var assert = require("assert");
+var sinon = require("sinon");
+var expect = require('chai').expect;
+
 require("../Morphine");
 
 
@@ -19,18 +22,35 @@ describe('Listeners tests', function () {
     
     describe('Событие add', function () {
 
-        it('Добавление объекта в пустой объект', function (cb) {
-            var morph = new Morphine();
+        describe('set path в пустой объект', function () {
+            
+            it('Состояние event-объекта', function (cb) {
+                var morph = new Morphine();
 
-            morph.on('add', function (e) {
-                // Event {type: "add", path: "Application", fieldName: "Application"}
-                assert.equal(e.type, 'add', 'Тип события: add');
-                assert.equal(e.path, 'Application', 'Path == Application');
-                assert.equal(e.fieldName, 'Application', 'fieldName == Application');
-                cb();
+                morph.on('add', function (e) {
+                    // Event {type: "add", path: "Application", fieldName: "Application"}
+                    expect(e.type).to.equal('add');
+                    expect(e.path).to.equal('Application');
+                    expect(e.fieldName).to.equal('Application');                    
+                    cb();
+                });
+
+                morph.set('Application');
             });
 
-            morph.set('Application');
+            
+            it('Количество вызовов event-listener метода', function () {
+                var addHandler = sinon.spy();
+                var morph = new Morphine();
+
+                morph.on('add', addHandler);
+                morph.set('Application');
+
+                assert.equal(addHandler.calledOnce, true, 'Обработчик события add вызван один раз');
+            });
+
+
+
         });
 
     });
