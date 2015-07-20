@@ -49,7 +49,16 @@ describe('Listeners tests', function () {
                 assert.equal(addHandler.calledOnce, true, 'Обработчик события add вызван один раз');
             });
 
+            
+            it('Создание нескольких вложенных объектов', function () {
+                var addHandler = sinon.spy();
+                var morph = new Morphine();
 
+                morph.on('add', addHandler);
+                morph.set('Application.Collections.Users.$');
+
+                assert.equal(addHandler.callCount, 3, 'Обработчик события add вызван 3 раза');
+            });
 
         });
 
