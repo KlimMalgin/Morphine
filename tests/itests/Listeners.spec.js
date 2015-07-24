@@ -50,7 +50,7 @@ describe('Listeners tests', function () {
             });
 
             
-            it('Создание нескольких вложенных объектов', function () {
+            it('Генерация события add при создании нескольких вложенных объектов', function () {
                 var addHandler = sinon.spy();
                 var morph = new Morphine();
 
@@ -58,6 +58,25 @@ describe('Listeners tests', function () {
                 morph.set('Application.Collections.Users.$');
 
                 assert.equal(addHandler.callCount, 3, 'Обработчик события add вызван 3 раза');
+            });
+
+            it('Генерация change при изменении вложенного объекта', function () {
+                var changeHandler = sinon.spy(),
+                    morph = new Morphine();
+                
+                morph.on('change', changeHandler);
+                morph.set('Application.Collections.Users.$');
+
+                morph.set('Application.Collections.Comments.$');
+
+                sinon.assert.calledOnce(changeHandler);
+                sinon.assert.calledWith(changeHandler, 
+                    sinon.match({
+                        type: sinon.match("change"), 
+                        path: sinon.match("Application.Collections"), 
+                        fieldName: sinon.match("Collections")
+                    })
+                );
             });
 
         });
