@@ -37,7 +37,6 @@ describe('Listeners tests', function () {
 
                 morph.set('Application');
             });
-
             
             it('Количество вызовов event-listener метода', function () {
                 var addHandler = sinon.spy();
@@ -49,7 +48,6 @@ describe('Listeners tests', function () {
                 //assert.equal(addHandler.calledOnce, true, 'Обработчик события add вызван один раз');
                 expect(addHandler.calledOnce).to.be.true;
             });
-
             
             it('Генерация события add при создании нескольких вложенных объектов', function () {
                 var addHandler = sinon.spy();
@@ -109,10 +107,9 @@ describe('Listeners tests', function () {
                     path: "0.value", 
                     fieldName: "value"
                 });
-
             });
 
-            it('Генерация change на коллекции при изменении в ней элементов', function () {
+            xit('Генерация change на коллекции при изменении в ней элементов', function () {
                 var morph = new Morphine(),
                     Users = null,
                     addHandler = sinon.spy(),
@@ -149,8 +146,23 @@ describe('Listeners tests', function () {
                     fieldName: "value"
                     // value: XX ???
                 });
-
             });
+
+            it('Генерация remove на коллекции при удалении в ней элементов', function () { expect(true).to.be.false; });
+
+            it('Генерация remove при изменении вложенного объекта', function () { expect(true).to.be.false; });
+
+            it('Генерация all при добавлении вложенного объекта', function () { expect(true).to.be.false; });
+
+            it('Генерация all при изменении вложенного объекта', function () { expect(true).to.be.false; });
+
+            it('Генерация all при удалении вложенного объекта', function () { expect(true).to.be.false; });
+
+            it('Генерация all при добавлении элемента в коллекцию', function () { expect(true).to.be.false; });
+
+            it('Генерация all при изменении элемента в коллекции', function () { expect(true).to.be.false; });
+
+            it('Генерация all при удалении элемента из коллекции', function () { expect(true).to.be.false; });
 
         });
 
