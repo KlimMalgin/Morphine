@@ -46,7 +46,8 @@ describe('Listeners tests', function () {
                 morph.on('add', addHandler);
                 morph.set('Application');
 
-                assert.equal(addHandler.calledOnce, true, 'Обработчик события add вызван один раз');
+                //assert.equal(addHandler.calledOnce, true, 'Обработчик события add вызван один раз');
+                expect(addHandler.calledOnce).to.be.true;
             });
 
             
@@ -57,10 +58,11 @@ describe('Listeners tests', function () {
                 morph.on('add', addHandler);
                 morph.set('Application.Collections.Users.$');
 
-                assert.equal(addHandler.callCount, 3, 'Обработчик события add вызван 3 раза');
+                //assert.equal(addHandler.callCount, 3, 'Обработчик события add вызван 3 раза');
+                expect(addHandler.callCount).to.be.equal(3);
             });
 
-            it('Генерация change при изменении вложенного объекта', function () {
+            xit('Генерация change при изменении вложенного объекта', function () {
                 var changeHandler = sinon.spy(),
                     morph = new Morphine();
                 
@@ -77,6 +79,77 @@ describe('Listeners tests', function () {
                         fieldName: sinon.match("Collections")
                     })
                 );
+            });
+
+            xit('Генерация add на коллекции при добавлении элементов в нее', function () {
+                var morph = new Morphine(),
+                    Users = null,
+                    addHandler = sinon.spy(),
+                    changeHandler = sinon.spy();
+
+                morph.set('Application.Collections.Users.$');
+
+                morph.on('add', addHandler);
+                morph.on('change', changeHandler);
+
+                Users = morph.get('Application.Collections.Users');
+
+                Users.set('$.value', 12);
+
+                sinon.assert.callCount(addHandler, 2);
+                sinon.assert.callCount(changeHandler, 0);
+                
+                expect(addHandler.getCall(0).args[0]).to.deep.equal({
+                    type: "add", 
+                    path: "0", 
+                    fieldName: "0"
+                });
+                expect(addHandler.getCall(1).args[0]).to.deep.equal({
+                    type: "add", 
+                    path: "0.value", 
+                    fieldName: "value"
+                });
+
+            });
+
+            it('Генерация change на коллекции при изменении в ней элементов', function () {
+                var morph = new Morphine(),
+                    Users = null,
+                    addHandler = sinon.spy(),
+                    changeHandler = sinon.spy();
+
+                morph.set('Application.Collections.Users.$');
+
+                Users = morph.get('Application.Collections.Users');
+
+                Users.set('$.value', 12);
+                Users.set('$.type', 'new');
+
+                morph.on('add', addHandler);
+                morph.on('change', changeHandler);
+
+                // 'new' => 'old'
+                Users.set('1.type', 'old');
+                // 12 => 44
+                Users.set('0.value', 44);
+                // Операция increment на элементах
+
+                sinon.assert.callCount(addHandler, 0);
+                sinon.assert.callCount(changeHandler, 2);
+                
+                expect(changeHandler.getCall(0).args[0]).to.deep.equal({
+                    type: "change", 
+                    path: "1.type", 
+                    fieldName: "type"
+                    // value: XX ???
+                });
+                expect(changeHandler.getCall(1).args[0]).to.deep.equal({
+                    type: "change", 
+                    path: "0.value", 
+                    fieldName: "value"
+                    // value: XX ???
+                });
+
             });
 
         });
