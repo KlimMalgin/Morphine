@@ -1,10 +1,10 @@
 'use strict';
 
-/*var assert = require("assert");
+var assert = require("assert");
 var sinon = require("sinon");
 var expect = require('chai').expect;
 
-require("../Morphine");*/
+require("../Morphine");
 
 
 // Создаем пустой объект, слушаем, добавляем структуру, проверяем
