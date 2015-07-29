@@ -58,7 +58,7 @@ describe('Listeners tests', function () {
             expect(addHandler.callCount).to.be.equal(3);
         });
 
-        xit('Генерация add на коллекции при добавлении элементов в нее', function () {
+        it('Генерация add на коллекции при добавлении элементов в нее', function () {
             var morph = new Morphine(),
                 Users = null,
                 addHandler = sinon.spy(),
@@ -78,12 +78,12 @@ describe('Listeners tests', function () {
             
             expect(addHandler.getCall(0).args[0]).to.deep.equal({
                 type: "add", 
-                path: "Application.Collections.Users.0", 
-                fieldName: "0"
+                path: "Application.Collections.Users.$", 
+                fieldName: "$"
             });
             expect(addHandler.getCall(1).args[0]).to.deep.equal({
                 type: "add", 
-                path: "Application.Collections.Users.0.value", 
+                path: "Application.Collections.Users.$.value", 
                 fieldName: "value"
             });
         });
@@ -297,7 +297,7 @@ describe('Listeners tests', function () {
             }); 
         });
 
-        it('Генерация all при добавлении элемента в коллекцию', function () {
+        xit('Генерация all при добавлении элемента в коллекцию', function () {
             var addHandler = sinon.spy(),
                 morph = new Morphine();
             
@@ -314,7 +314,7 @@ describe('Listeners tests', function () {
             }); 
         });
 
-        it('Генерация all при изменении элемента в коллекции', function () {
+        xit('Генерация all при изменении элемента в коллекции', function () {
             var changeHandler = sinon.spy(),
                 morph = new Morphine();
             
