@@ -1,10 +1,10 @@
 'use strict';
 
-var assert = require("assert");
+/*var assert = require("assert");
 var sinon = require("sinon");
 var expect = require('chai').expect;
 
-require("../Morphine");
+require("../Morphine");*/
 
 
 // Создаем пустой объект, слушаем, добавляем структуру, проверяем
@@ -113,7 +113,44 @@ describe('Listeners tests', function () {
             );
         });
 
-        xit('Генерация change на коллекции при изменении в ней элементов', function () {
+        it('Циферное обозначение номеров элементов в коллекции вместо знака $', function () {
+            var morph = new Morphine(),
+                Users = null,
+                changeHandler = sinon.spy();
+
+            morph.set('Application.Collections.Users.$');
+
+            Users = morph.get('Application.Collections.Users');
+
+            Users.set('$.value', 12);
+            Users.set('$.type', 'new');
+
+            morph.on('change', changeHandler);
+
+            // 'new' => 'old'
+            Users.set('1.type', 'old');
+            // 12 => 44
+            Users.set('0.value', 44);
+
+            sinon.assert.callCount(changeHandler, 2);
+            
+            expect(changeHandler.getCall(0).args[0]).to.deep.equal({
+                type: "change", 
+                path: "Application.Collections.Users.1.type",
+                relativePath: "1.type", 
+                fieldName: "type"
+                // value: XX ???
+            });
+            expect(changeHandler.getCall(1).args[0]).to.deep.equal({
+                type: "change", 
+                path: "Application.Collections.Users.0.value", 
+                relativePath: "0.value", 
+                fieldName: "value"
+                // value: XX ???
+            });
+        });
+
+        it('Генерация change на коллекции при изменении в ней элементов', function () {
             var morph = new Morphine(),
                 Users = null,
                 addHandler = sinon.spy(),
@@ -133,20 +170,21 @@ describe('Listeners tests', function () {
             Users.set('1.type', 'old');
             // 12 => 44
             Users.set('0.value', 44);
-            // Операция increment на элементах
 
             sinon.assert.callCount(addHandler, 0);
             sinon.assert.callCount(changeHandler, 2);
             
             expect(changeHandler.getCall(0).args[0]).to.deep.equal({
                 type: "change", 
-                path: "Application.Collections.Users.1.type", 
+                path: "Application.Collections.Users.$.type",
+                relativePath: "1.type", 
                 fieldName: "type"
                 // value: XX ???
             });
             expect(changeHandler.getCall(1).args[0]).to.deep.equal({
                 type: "change", 
-                path: "Application.Collections.Users.0.value", 
+                path: "Application.Collections.Users.$.value", 
+                relativePath: "0.value", 
                 fieldName: "value"
                 // value: XX ???
             });

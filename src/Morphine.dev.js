@@ -475,8 +475,6 @@
             		}
                 } else if (intRegexp.test(index)) {
                     if (this.has(index) && typeof this[index] === 'undefined') {
-                        // TODO: Заменить все console-выводы на исключения
-                        //console.error("Элемент %o не существует", index);
                         this[index] = isMorphine(value) ? newObjectPrepare.call(this, value, index) : value;
             			EventEmitter.call(this, 'change', path, index);
                     } else if (!this.has(index)) {
@@ -504,9 +502,9 @@
                         		this[index] = this[index];
                         	} else {
                         		this[index] = newObjectPrepare.call(this, new MorphineArray(), index);
+                                EventEmitter.call(this, eventType, currentLevel.join(CONFIG.separator), index);
                         	}
                             //this[index] = isChange ? this[index] : new MorphineArray();
-                            EventEmitter.call(this, eventType, currentLevel.join(CONFIG.separator), index);
                         }
                     } else if (testInt) {
                         if (intRegexp.test(index) || index === "$") {
@@ -519,8 +517,8 @@
 								this[index] = this[index];
                         	} else {
                         		this[index] = newObjectPrepare.call(this, new MorphineArray(), index);
+                                EventEmitter.call(this, eventType, currentLevel.join(CONFIG.separator), index);
                         	}
-                            EventEmitter.call(this, eventType, currentLevel.join(CONFIG.separator), index);
                         }
                     } else {
                         isChange = typeof this[index] !== 'undefined';
@@ -529,8 +527,8 @@
 							this[index] = this[index];
                     	} else {
                     		this[index] = newObjectPrepare.call(this, new MorphineArray(), index);
+                            EventEmitter.call(this, eventType, currentLevel.join(CONFIG.separator), index);
                     	}
-                        EventEmitter.call(this, eventType, currentLevel.join(CONFIG.separator), index);
                     }
                 } else {
                     if (intRegexp.test(index)) {
@@ -540,8 +538,8 @@
 							this[index] = this[index];
                     	} else {
                     		this[index] = newObjectPrepare.call(this, new Morphine(), index);
+                            EventEmitter.call(this, eventType, currentLevel.join(CONFIG.separator), index);
                     	}
-                        EventEmitter.call(this, eventType, currentLevel.join(CONFIG.separator), index);
                     } else if (index === '$') {
                         this.push(newObjectPrepare.call(this, new Morphine(), index));
                         EventEmitter.call(this, 'add', currentLevel.join(CONFIG.separator), index);
@@ -552,8 +550,8 @@
 							this[index] = this[index];
                     	} else {
                     		this[index] = newObjectPrepare.call(this, new Morphine(), index);
+                            EventEmitter.call(this, eventType, currentLevel.join(CONFIG.separator), index);
                     	}
-                        EventEmitter.call(this, eventType, currentLevel.join(CONFIG.separator), index);
                     }
                 }  
 
