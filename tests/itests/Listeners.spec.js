@@ -1,10 +1,10 @@
 'use strict';
 
-/*var assert = require("assert");
+var assert = require("assert");
 var sinon = require("sinon");
 var expect = require('chai').expect;
 
-require("../Morphine");*/
+require("../Morphine");
 
 
 // Создаем пустой объект, слушаем, добавляем структуру, проверяем
@@ -85,7 +85,7 @@ describe('Listeners tests', function () {
             });
             expect(addHandler.getCall(1).args[0]).to.deep.equal({
                 type: "add", 
-                path: "Application.Collections.Users.$.value", 
+                path: "Application.Collections.Users.0.value", 
                 relativePath: "$.value",
                 fieldName: "value"
             });
@@ -176,14 +176,14 @@ describe('Listeners tests', function () {
             
             expect(changeHandler.getCall(0).args[0]).to.deep.equal({
                 type: "change", 
-                path: "Application.Collections.Users.$.type",
+                path: "Application.Collections.Users.1.type",
                 relativePath: "1.type", 
                 fieldName: "type"
                 // value: XX ???
             });
             expect(changeHandler.getCall(1).args[0]).to.deep.equal({
                 type: "change", 
-                path: "Application.Collections.Users.$.value", 
+                path: "Application.Collections.Users.0.value", 
                 relativePath: "0.value", 
                 fieldName: "value"
                 // value: XX ???
@@ -386,7 +386,7 @@ describe('Listeners tests', function () {
             sinon.assert.calledOnce(removeHandler);
             expect(removeHandler.getCall(0).args[0]).to.deep.equal({
                 type: "remove", 
-                path: "Application.Collections.Users.$.login", 
+                path: "Application.Collections.Users.0.login", 
                 relativePath: "Application.Collections.Users.0.login", 
                 fieldName: "login"
             });
