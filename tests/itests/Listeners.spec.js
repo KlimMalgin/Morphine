@@ -22,12 +22,13 @@ describe('Listeners tests', function () {
     
     describe('Событие add', function () {
             
-        it('Состояние event-объекта', function (cb) {
+        xit('Состояние event-объекта', function (cb) {
             var morph = new Morphine();
 
             morph.on('add', function (e) {
                 // Event {type: "add", path: "Application", fieldName: "Application"}
                 expect(e.type).to.equal('add');
+                expect(e.relativePath).to.equal('Application');
                 expect(e.path).to.equal('Application');
                 expect(e.fieldName).to.equal('Application');                    
                 cb();
@@ -79,11 +80,13 @@ describe('Listeners tests', function () {
             expect(addHandler.getCall(0).args[0]).to.deep.equal({
                 type: "add", 
                 path: "Application.Collections.Users.$", 
+                relativePath: "$",
                 fieldName: "$"
             });
             expect(addHandler.getCall(1).args[0]).to.deep.equal({
                 type: "add", 
                 path: "Application.Collections.Users.$.value", 
+                relativePath: "$.value",
                 fieldName: "value"
             });
         });
@@ -209,12 +212,14 @@ describe('Listeners tests', function () {
             expect(removeHandler.getCall(0).args[0]).to.deep.equal({
                 type: "remove", 
                 path: "Application.Session.User.sessionData.timestamp", 
+                relativePath: "Application.Session.User.sessionData.timestamp",
                 fieldName: "timestamp"
                 // value: XX ???
             });
             expect(removeHandler.getCall(1).args[0]).to.deep.equal({
                 type: "remove", 
                 path: "Application.Session.User.sessionData", 
+                relativePath: "Application.Session.User.sessionData",
                 fieldName: "sessionData"
                 // value: XX ???
             });
@@ -343,7 +348,8 @@ describe('Listeners tests', function () {
             sinon.assert.calledOnce(removeHandler);
             expect(removeHandler.getCall(0).args[0]).to.deep.equal({
                 type: "remove", 
-                path: "Application.Collections.Users.0.login", 
+                path: "Application.Collections.Users.$.login", 
+                relativePath: "Application.Collections.Users.0.login", 
                 fieldName: "login"
             });
         });

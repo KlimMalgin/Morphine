@@ -79,8 +79,8 @@
 
     	this.bubbleHandler = function (event) {
             var k = this.getMyKey();
-            if (event.bubblePath === null) {event.bubblePath = event.fieldName;}
-            if (k) {event.bubblePath = k + CONFIG.separator + event.bubblePath;}
+            if (event.path === null) {event.path = event.fieldName;}
+            if (k) {event.path = k + CONFIG.separator + event.path;}
     		// Генерируем событие пришедшее от дочернего элемента на текущем объекте
     		parent.emit(event.type, event);
             //parent.emit('all', event);
@@ -114,8 +114,8 @@
 
     	this.bubbleHandler = function (event) {
             var k = this.getMyKey();
-            if (event.bubblePath === null) {event.bubblePath = event.fieldName;}
-            if (k) {event.bubblePath = k + CONFIG.separator + event.bubblePath;}
+            if (event.path === null) {event.path = event.fieldName;}
+            if (k) {event.path = k + CONFIG.separator + event.path;}
     		// Генерируем событие пришедшее от дочернего элемента на текущем объекте
     		parent.emit(event.type, event);
     		//parent.emit('all', event);
@@ -139,31 +139,31 @@
     MA.prototype.constructor = MA;
 
 
-	function Event (eventType, path, fieldName) {
+	function Event (eventType, relativePath, fieldName) {
 		/*stopPropagation: function () {...},*/
     	this.type = eventType;
-        this.relativePath = path;
-    	this.path = path;
+        // Относительный путь от объекта, который инициировал генерацию пути
+        this.relativePath = relativePath;
+        // Полный путь от начала эмита до текущего объекта
+    	this.path = null;
     	this.fieldName = fieldName;
-		this.bubblePath = null;
 		return this;
 	}
 
     /**
 	 * Создает объект события, которое будет эмиторивано внутри Morphine-структуры
      */
-    function EventCreator (eventType, path, fieldName) {
-    	return new Event(eventType, path, fieldName);
+    function EventCreator (eventType, relativePath, fieldName) {
+    	return new Event(eventType, relativePath, fieldName);
     }
 
     /**
 	 * Эмитирует заданное событие и событие all
      */
-    // TODO: Для add и change передавать название добавленного/измененного поля.
-    function EventEmitter (eventType, path, fieldName) {
-    	this.emit(eventType, EventCreator(eventType, path, fieldName));
-        this.emit('all', EventCreator(eventType, path, fieldName));
-        this.emitBubble(EventCreator(eventType, path, fieldName));
+    function EventEmitter (eventType, relativePath, fieldName) {
+    	this.emit(eventType, EventCreator(eventType, relativePath, fieldName));
+        this.emit('all', EventCreator(eventType, relativePath, fieldName));
+        this.emitBubble(EventCreator(eventType, relativePath, fieldName));
     }
 
     function MorphineBuilder () {
