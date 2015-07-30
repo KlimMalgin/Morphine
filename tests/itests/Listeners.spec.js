@@ -193,7 +193,7 @@ describe('Listeners tests', function () {
 
     describe('Событие remove', function () {
 
-        xit('Генерация remove на коллекции при удалении в ней элементов', function () { 
+        it('Генерация remove на коллекции при удалении в ней элементов', function () { 
             var morph = new Morphine(),
                 Users = null,
                 removeHandler = sinon.spy();
@@ -216,12 +216,14 @@ describe('Listeners tests', function () {
             expect(removeHandler.getCall(0).args[0]).to.deep.equal({
                 type: "remove", 
                 path: "Application.Collections.Users.2.el", 
+                relativePath: "2.el",
                 fieldName: "el"
                 // value: XX ???
             });
             expect(removeHandler.getCall(1).args[0]).to.deep.equal({
                 type: "remove", 
                 path: "Application.Collections.Users.2", 
+                relativePath: "2",
                 fieldName: "2"
                 // value: XX ???
             });
