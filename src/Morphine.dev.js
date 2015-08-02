@@ -361,11 +361,12 @@
      */
 	M.prototype.emit = MA.prototype.emit = function(eventType, event) {
 		var listeners = this.__subscribes[eventType],
-			ln = listeners ? listeners.length : 0;
+		    allListeners = this.__subscribes['all'],
+			ln = listeners ? listeners.length : 0,
+			allLn = allListeners ? allListeners.length : 0;
 
-		for (var i = 0; i<ln; i++) {
-			listeners[i].call({}, event);
-		}
+		for (var i = 0; i<ln; i++) { listeners[i].call({}, event); }
+		for (var i = 0; i<allLn; i++) { allListeners[i].call({}, event); }
 	};
 
     /**

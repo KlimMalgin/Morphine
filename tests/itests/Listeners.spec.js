@@ -268,7 +268,7 @@ describe('Listeners tests', function () {
 
     describe('Событие all', function () {
 
-        xit('Генерация all при добавлении вложенного объекта', function () { 
+        it('Генерация all при добавлении вложенного объекта', function () { 
             var morph = new Morphine('Application.Session.User', {
                     login: 'Vasya',
                     pass: 'SecretPass',
@@ -277,7 +277,7 @@ describe('Listeners tests', function () {
                 addHandler = sinon.spy();
 
             morph.on('all', addHandler);
-
+            
             morph.set('Application.Session.User.sessionData', {
                 token: 'hd6wh3d93msu7',
                 timestamp: 33432423432
@@ -286,15 +286,16 @@ describe('Listeners tests', function () {
             // --
             sinon.assert.callCount(addHandler, 1);
             
-            expect(removeHandler.getCall(0).args[0]).to.deep.equal({
+            expect(addHandler.getCall(0).args[0]).to.deep.equal({
                 type: "add", 
                 path: "Application.Session.User.sessionData", 
+                relativePath: "Application.Session.User.sessionData", 
                 fieldName: "sessionData"
                 // value: XX ???
             });
         });
 
-        xit('Генерация all при изменении вложенного объекта', function () {
+        it('Генерация all при изменении вложенного объекта', function () {
             var morph = new Morphine('Application.Session.User', {
                     login: 'Vasya',
                     pass: 'SecretPass',
@@ -312,13 +313,14 @@ describe('Listeners tests', function () {
             expect(changeHandler.getCall(0).args[0]).to.deep.equal({
                 type: "change", 
                 path: "Application.Session.User.login", 
+                relativePath: "Application.Session.User.login", 
                 fieldName: "login"
                 // oldValue: XX ???
                 // newValue: XX ???
             });
         });
 
-        xit('Генерация all при удалении вложенного объекта', function () {
+        it('Генерация all при удалении вложенного объекта', function () {
            var morph = new Morphine('Application.Session.User', {
                     login: 'Vasya',
                     pass: 'SecretPass',
@@ -336,6 +338,7 @@ describe('Listeners tests', function () {
             expect(removeHandler.getCall(0).args[0]).to.deep.equal({
                 type: "remove", 
                 path: "Application.Session.User.login", 
+                relativePath: "Application.Session.User.login", 
                 fieldName: "login"
                 // oldValue: XX ???
                 // newValue: XX ???
@@ -354,7 +357,8 @@ describe('Listeners tests', function () {
             sinon.assert.callCount(addHandler, 2);
             expect(addHandler.getCall(0).args[0]).to.deep.equal({
                 type: "add", 
-                path: "Application.Collections.Users.0.login", 
+                path: "Application.Collections.Users.0.login",
+                relativePath: "Application.Collections.Users.0.login", 
                 fieldName: "login"
             }); 
         });
