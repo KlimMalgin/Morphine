@@ -462,40 +462,41 @@
             var testInt = intRegexp.test(pathArray[0]);
             var testCollection = pathArray[0] === '$';
             var tmpObject = null,
+                tmpLn = null,
             	eventType = '',
             	isChange = false;
 
-            currentLevel.push(index);
+            if (index == '$') { /*index = */tmpLn = this.length.toString(); }
+            currentLevel.push(index == '$' ? tmpLn : index);
 
             if (pathArray.length === 0) {
                 if (index === '$') {
             		if (value) {
-            			//this.push(value);
-            			this.push(isMorphine(value) ? newObjectPrepare.call(this, value, this.length.toString()) : value);
-            			EventEmitter.call(this, 'add', path, index);
+            			this.push(isMorphine(value) ? newObjectPrepare.call(this, value, tmpLn) : value);
+            			EventEmitter.call(this, 'add', path, tmpLn);
             		}
                 } else if (intRegexp.test(index)) {
                     if (this.has(index) && typeof this[index] === 'undefined') {
                         this[index] = isMorphine(value) ? newObjectPrepare.call(this, value, index) : value;
             			EventEmitter.call(this, 'change', path, index);
                     } else if (!this.has(index)) {
-                        this.push(isMorphine(value) ? newObjectPrepare.call(this, value, this.length.toString()) : value);
-            			EventEmitter.call(this, 'add', path, index);
+                        this.push(isMorphine(value) ? newObjectPrepare.call(this, value, tmpLn) : value);
+            			EventEmitter.call(this, 'add', path, tmpLn);
                         // Проверка соответствия индексов при сборке объекта из path-массива
                         if (this.length-1 != index) console.error("Несоответствие индекса созданного элемента ожидаемому индексу");
                     }
                 } else {
                     eventType = typeof this[index] !== 'undefined' ? 'change' : 'add';
                     this[index] = isMorphine(value) ? newObjectPrepare.call(this, value, index) : value;
-                    EventEmitter.call(this, eventType, path, index);
+                    EventEmitter.call(this, eventType, currentLevel.join(CONFIG.separator), index);
                 }
                 return;
             } else {
                 if (testInt || testCollection) {
                     if (testCollection) {
                         if (index === "$") {
-                            this.push(newObjectPrepare.call(this, new MorphineArray(), this.length.toString()));
-                            EventEmitter.call(this, 'add', currentLevel.join(CONFIG.separator), index);
+                            this.push(newObjectPrepare.call(this, new MorphineArray(), tmpLn));
+                            EventEmitter.call(this, 'add', currentLevel.join(CONFIG.separator), tmpLn);
                         } else {
                         	isChange = typeof this[index] !== 'undefined';
                         	eventType = isChange ? 'change' : 'add';
@@ -509,8 +510,8 @@
                         }
                     } else if (testInt) {
                         if (intRegexp.test(index) || index === "$") {
-                            this.push(newObjectPrepare.call(this, new MorphineArray(), this.length.toString()));
-                            EventEmitter.call(this, 'add', currentLevel.join(CONFIG.separator), index);
+                            this.push(newObjectPrepare.call(this, new MorphineArray(), tmpLn));
+                            EventEmitter.call(this, 'add', currentLevel.join(CONFIG.separator), tmpLn);
                         } else {
                         	isChange = typeof this[index] !== 'undefined';
                         	eventType = isChange ? 'change' : 'add';
@@ -542,8 +543,8 @@
                             EventEmitter.call(this, eventType, currentLevel.join(CONFIG.separator), index);
                     	}
                     } else if (index === '$') {
-                        this.push(newObjectPrepare.call(this, new Morphine(), this.length.toString()));
-                        EventEmitter.call(this, 'add', currentLevel.join(CONFIG.separator), index);
+                        this.push(newObjectPrepare.call(this, new Morphine(), tmpLn));
+                        EventEmitter.call(this, 'add', currentLevel.join(CONFIG.separator), tmpLn);
                     } else {
                         isChange = typeof this[index] !== 'undefined';
                     	eventType = isChange ? 'change' : 'add';

@@ -79,14 +79,14 @@ describe('Listeners tests', function () {
             
             expect(addHandler.getCall(0).args[0]).to.deep.equal({
                 type: "add", 
-                path: "Application.Collections.Users.$", 
-                relativePath: "$",
-                fieldName: "$"
+                path: "Application.Collections.Users.0", 
+                relativePath: "0",
+                fieldName: "0"
             });
             expect(addHandler.getCall(1).args[0]).to.deep.equal({
                 type: "add", 
                 path: "Application.Collections.Users.0.value", 
-                relativePath: "$.value",
+                relativePath: "0.value",
                 fieldName: "value"
             });
         });
@@ -345,7 +345,7 @@ describe('Listeners tests', function () {
             }); 
         });
 
-        xit('Генерация all при добавлении элемента в коллекцию', function () {
+        it('Генерация all при добавлении элемента в коллекцию', function () {
             var addHandler = sinon.spy(),
                 morph = new Morphine();
             
@@ -357,9 +357,9 @@ describe('Listeners tests', function () {
             sinon.assert.callCount(addHandler, 2);
             expect(addHandler.getCall(0).args[0]).to.deep.equal({
                 type: "add", 
-                path: "Application.Collections.Users.0.login",
-                relativePath: "Application.Collections.Users.0.login", 
-                fieldName: "login"
+                path: "Application.Collections.Users.0",
+                relativePath: "Application.Collections.Users.0", 
+                fieldName: "0"
             }); 
         });
 
