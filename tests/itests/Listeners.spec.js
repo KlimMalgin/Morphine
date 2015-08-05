@@ -94,9 +94,6 @@ describe('Listeners tests', function () {
 
     describe('Событие change', function () {
 
-        // TODO: Варианты решения:
-        // Во всплывающем эмиттере add генерировать change-событие
-        // Генерировать change в момент генерации add в билдере объекта
         it('Генерация change при изменении вложенного объекта', function () {
             var changeHandler = sinon.spy(),
                 morph = new Morphine();
@@ -417,6 +414,27 @@ describe('Listeners tests', function () {
                 fieldName: "login"
             });
         });
+    });
+    
+    describe('Additional tests', function() {
+        
+        describe('Эмит change при добавлении поля в корень Morphine-структуры', function() {
+            var changeHandler = sinon.spy(),
+                morph = new Morphine();
+                
+            morph.on('change', changeHandler);
+            morph.set('Application');
+
+            sinon.assert.callCount(changeHandler, 1);
+            expect(changeHandler.getCall(0).args[0]).to.deep.equal({
+                type: "change", 
+                path: "Application",
+                relativePath: "", 
+                fieldName: "Application"
+            });
+
+        });
+        
     });
 
 });
