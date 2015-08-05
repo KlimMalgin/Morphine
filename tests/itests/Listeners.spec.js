@@ -94,7 +94,10 @@ describe('Listeners tests', function () {
 
     describe('Событие change', function () {
 
-        xit('Генерация change при изменении вложенного объекта', function () {
+        // TODO: Варианты решения:
+        // Во всплывающем эмиттере add генерировать change-событие
+        // Генерировать change в момент генерации add в билдере объекта
+        it('Генерация change при изменении вложенного объекта', function () {
             var changeHandler = sinon.spy(),
                 morph = new Morphine();
             
@@ -103,14 +106,31 @@ describe('Listeners tests', function () {
 
             morph.set('Application.Collections.Comments.$');
 
-            sinon.assert.calledOnce(changeHandler);
-            sinon.assert.calledWith(changeHandler, 
-                sinon.match({
-                    type: sinon.match("change"), 
-                    path: sinon.match("Application.Collections"), 
-                    fieldName: sinon.match("Collections")
-                })
-            );
+            sinon.assert.callCount(changeHandler, 4);
+            expect(changeHandler.getCall(0).args[0]).to.deep.equal({
+                type: "change", 
+                path: null,  // TODO: ??
+                relativePath: "", 
+                fieldName: "Application"
+            });
+            expect(changeHandler.getCall(1).args[0]).to.deep.equal({
+                type: "change", 
+                path: "Application.Collections",
+                relativePath: "Application", 
+                fieldName: "Collections"
+            });
+            expect(changeHandler.getCall(2).args[0]).to.deep.equal({
+                type: "change", 
+                path: "Application.Collections.Users",
+                relativePath: "Application.Collections", 
+                fieldName: "Users"
+            });
+            expect(changeHandler.getCall(3).args[0]).to.deep.equal({
+                type: "change", 
+                path: "Application.Collections.Comments",
+                relativePath: "Application.Collections", 
+                fieldName: "Comments"
+            });
         });
 
         it('Циферное обозначение номеров элементов в коллекции вместо знака $', function () {

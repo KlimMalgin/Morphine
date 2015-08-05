@@ -474,6 +474,8 @@
             		if (value) {
             			this.push(isMorphine(value) ? newObjectPrepare.call(this, value, tmpLn) : value);
             			EventEmitter.call(this, 'add', path, tmpLn);
+            			// Здесь в change должен отправляться path - 1 элемент
+            			// EventEmitter.call(this, 'change', path, tmpLn);
             		}
                 } else if (intRegexp.test(index)) {
                     if (this.has(index) && typeof this[index] === 'undefined') {
@@ -482,6 +484,8 @@
                     } else if (!this.has(index)) {
                         this.push(isMorphine(value) ? newObjectPrepare.call(this, value, tmpLn) : value);
             			EventEmitter.call(this, 'add', path, tmpLn);
+            			// Здесь в change должен отправляться path - 1 элемент
+            			//EventEmitter.call(this, 'change', path, tmpLn);
                         // Проверка соответствия индексов при сборке объекта из path-массива
                         if (this.length-1 != index) console.error("Несоответствие индекса созданного элемента ожидаемому индексу");
                     }
@@ -505,6 +509,8 @@
                         	} else {
                         		this[index] = newObjectPrepare.call(this, new MorphineArray(), index);
                                 EventEmitter.call(this, eventType, currentLevel.join(CONFIG.separator), index);
+                                //--
+                                EventEmitter.call(this, 'change', currentLevel.slice(0, currentLevel.length-1).join(CONFIG.separator), index);
                         	}
                             //this[index] = isChange ? this[index] : new MorphineArray();
                         }
@@ -520,6 +526,8 @@
                         	} else {
                         		this[index] = newObjectPrepare.call(this, new MorphineArray(), index);
                                 EventEmitter.call(this, eventType, currentLevel.join(CONFIG.separator), index);
+                                //--
+                                EventEmitter.call(this, 'change', currentLevel.slice(0, currentLevel.length-1).join(CONFIG.separator), index);
                         	}
                         }
                     } else {
@@ -530,6 +538,8 @@
                     	} else {
                     		this[index] = newObjectPrepare.call(this, new MorphineArray(), index);
                             EventEmitter.call(this, eventType, currentLevel.join(CONFIG.separator), index);
+                            //--
+                            EventEmitter.call(this, 'change', currentLevel.slice(0, currentLevel.length-1).join(CONFIG.separator), index);
                     	}
                     }
                 } else {
@@ -541,6 +551,8 @@
                     	} else {
                     		this[index] = newObjectPrepare.call(this, new Morphine(), index);
                             EventEmitter.call(this, eventType, currentLevel.join(CONFIG.separator), index);
+                            //--
+                            EventEmitter.call(this, 'change', currentLevel.slice(0, currentLevel.length-1).join(CONFIG.separator), index);
                     	}
                     } else if (index === '$') {
                         this.push(newObjectPrepare.call(this, new Morphine(), tmpLn));
@@ -553,6 +565,8 @@
                     	} else {
                     		this[index] = newObjectPrepare.call(this, new Morphine(), index);
                             EventEmitter.call(this, eventType, currentLevel.join(CONFIG.separator), index);
+                            //--
+                            EventEmitter.call(this, 'change', currentLevel.slice(0, currentLevel.length-1).join(CONFIG.separator), index);
                     	}
                     }
                 }  
