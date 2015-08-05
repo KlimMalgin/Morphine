@@ -383,7 +383,7 @@ describe('Listeners tests', function () {
             }); 
         });
 
-        xit('Генерация all при изменении элемента в коллекции', function () {
+        it('Генерация all при изменении элемента в коллекции', function () {
             var changeHandler = sinon.spy(),
                 morph = new Morphine();
             
@@ -392,11 +392,13 @@ describe('Listeners tests', function () {
 
             morph.set('Application.Collections.Users.0.login', 'Pol');
 
-            sinon.assert.callCount(changeHandler, 2);
+            sinon.assert.callCount(changeHandler, 1);
             expect(changeHandler.getCall(0).args[0]).to.deep.equal({
                 type: "change", 
                 path: "Application.Collections.Users.0.login", 
+                relativePath: "Application.Collections.Users.0.login",
                 fieldName: "login"
+                //value: ???
             });
         });
 
