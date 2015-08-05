@@ -419,4 +419,25 @@ describe('Listeners tests', function () {
         });
     });
 
+    describe('Additional tests', function() {
+        
+        xit('Эмит change при добавлении поля в корень Morphine-структуры', function() {
+            var changeHandler = sinon.spy(),
+                morph = new Morphine();
+                
+            morph.on('change', changeHandler);
+            morph.set('Application');
+
+            sinon.assert.callCount(changeHandler, 1);
+            expect(changeHandler.getCall(0).args[0]).to.deep.equal({
+                type: "change", 
+                path: "Application",
+                relativePath: "", 
+                fieldName: "Application"
+            });
+
+        });
+        
+    });
+
 });
