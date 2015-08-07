@@ -161,9 +161,10 @@
 	 * Эмитирует заданное событие и событие all
      */
     function EventEmitter (eventType, relativePath, fieldName) {
-    	this.emit(eventType, EventCreator(eventType, relativePath, fieldName));
-        this.emit('all', EventCreator(eventType, relativePath, fieldName));
-        this.emitBubble(EventCreator(eventType, relativePath, fieldName));
+        var event = EventCreator(eventType, relativePath, fieldName);
+    	this.emit(eventType, event);
+        this.emit('all', event);
+        this.emitBubble(event);
     }
 
     function MorphineBuilder () {

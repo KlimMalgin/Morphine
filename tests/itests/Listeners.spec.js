@@ -26,7 +26,7 @@ describe('Listeners tests', function () {
             var morph = new Morphine();
 
             morph.on('add', function (e) {
-                // Event {type: "add", path: "Application", fieldName: "Application"}
+                // Event {type: "add", path: "Application", relativePath: "Application", fieldName: "Application"}
                 expect(e.type).to.equal('add');
                 expect(e.relativePath).to.equal('Application');
                 expect(e.path).to.equal('Application');
