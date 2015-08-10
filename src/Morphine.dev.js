@@ -494,6 +494,8 @@
                     eventType = typeof this[index] !== 'undefined' ? 'change' : 'add';
                     this[index] = isMorphine(value) ? newObjectPrepare.call(this, value, index) : value;
                     EventEmitter.call(this, eventType, currentLevel.join(CONFIG.separator), index);
+                    //--
+                    EventEmitter.call(this, 'change', currentLevel.slice(0, currentLevel.length-1).join(CONFIG.separator), index);
                 }
                 return;
             } else {
