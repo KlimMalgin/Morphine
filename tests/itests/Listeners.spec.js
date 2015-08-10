@@ -22,7 +22,7 @@ describe('Listeners tests', function () {
     
     describe('Событие add', function () {
             
-        xit('Состояние event-объекта', function (cb) {
+        it('Состояние event-объекта', function (cb) {
             var morph = new Morphine();
 
             morph.on('add', function (e) {
@@ -109,7 +109,7 @@ describe('Listeners tests', function () {
             sinon.assert.callCount(changeHandler, 4);
             expect(changeHandler.getCall(0).args[0]).to.deep.equal({
                 type: "change", 
-                path: null,  // TODO: ??
+                path: "Application",
                 relativePath: "", 
                 fieldName: "Application"
             });

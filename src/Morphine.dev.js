@@ -79,7 +79,7 @@
 
     	this.bubbleHandler = function (event) {
             var k = this.getMyKey();
-            if (event.path === null) {event.path = event.fieldName;}
+            //if (event.path === null) {event.path = event.fieldName;}
             if (k) {event.path = k + CONFIG.separator + event.path;}
     		// Генерируем событие пришедшее от дочернего элемента на текущем объекте
     		parent.emit(event.type, event);
@@ -114,7 +114,7 @@
 
     	this.bubbleHandler = function (event) {
             var k = this.getMyKey();
-            if (event.path === null) {event.path = event.fieldName;}
+            //if (event.path === null) {event.path = event.fieldName;}
             if (k) {event.path = k + CONFIG.separator + event.path;}
     		// Генерируем событие пришедшее от дочернего элемента на текущем объекте
     		parent.emit(event.type, event);
@@ -145,7 +145,7 @@
         // Относительный путь от объекта, который инициировал генерацию пути
         this.relativePath = relativePath;
         // Полный путь от начала эмита до текущего объекта
-    	this.path = null;
+    	this.path = fieldName;
     	this.fieldName = fieldName;
 		return this;
 	}
