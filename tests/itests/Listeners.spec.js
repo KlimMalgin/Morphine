@@ -62,20 +62,17 @@ describe('Listeners tests', function () {
         it('Генерация add на коллекции при добавлении элементов в нее', function () {
             var morph = new Morphine(),
                 Users = null,
-                addHandler = sinon.spy(),
-                changeHandler = sinon.spy();
+                addHandler = sinon.spy();
 
             morph.set('Application.Collections.Users.$');
 
             morph.on('add', addHandler);
-            morph.on('change', changeHandler);
 
             Users = morph.get('Application.Collections.Users');
 
             Users.set('$.value', 12);
 
             sinon.assert.callCount(addHandler, 2);
-            sinon.assert.callCount(changeHandler, 1);
             
             expect(addHandler.getCall(0).args[0]).to.deep.equal({
                 type: "add", 
@@ -94,9 +91,6 @@ describe('Listeners tests', function () {
 
     describe('Событие change', function () {
 
-        // TODO: Варианты решения:
-        // Во всплывающем эмиттере add генерировать change-событие
-        // Генерировать change в момент генерации add в билдере объекта
         it('Генерация change при изменении вложенного объекта', function () {
             var changeHandler = sinon.spy(),
                 morph = new Morphine();
@@ -152,13 +146,13 @@ describe('Listeners tests', function () {
             // 12 => 44
             Users.set('0.value', 44);
 
-            sinon.assert.callCount(changeHandler, 4);
+            sinon.assert.callCount(changeHandler, 2);
             
             // change field "type"
             expect(changeHandler.getCall(0).args[0]).to.deep.equal({
                 type: "change", 
                 path: "Application.Collections.Users.1.type",
-                relativePath: "1.type", 
+                relativePath: "1", 
                 fieldName: "type"
                 // value: XX ???
             });
@@ -166,30 +160,11 @@ describe('Listeners tests', function () {
             // change object "Users.1"
             expect(changeHandler.getCall(1).args[0]).to.deep.equal({
                 type: "change", 
-                path: "Application.Collections.Users.1.type", 
-                relativePath: "1", 
-                fieldName: "type"
-                // value: XX ???
-            });
-            
-            // change field "value"
-            expect(changeHandler.getCall(2).args[0]).to.deep.equal({
-                type: "change", 
-                path: "Application.Collections.Users.0.value", 
-                relativePath: "0.value", 
-                fieldName: "value"
-                // value: XX ???
-            });
-            
-            // change object "Users.0"
-            expect(changeHandler.getCall(3).args[0]).to.deep.equal({
-                type: "change", 
                 path: "Application.Collections.Users.0.value", 
                 relativePath: "0", 
                 fieldName: "value"
                 // value: XX ???
             });
-            
         });
 
         it('Генерация change на коллекции при изменении в ней элементов', function () {
@@ -214,30 +189,16 @@ describe('Listeners tests', function () {
             Users.set('0.value', 44);
 
             sinon.assert.callCount(addHandler, 0);
-            sinon.assert.callCount(changeHandler, 4);
+            sinon.assert.callCount(changeHandler, 2);
             
             expect(changeHandler.getCall(0).args[0]).to.deep.equal({
                 type: "change", 
                 path: "Application.Collections.Users.1.type",
-                relativePath: "1.type", 
-                fieldName: "type"
-                // value: XX ???
-            });
-            expect(changeHandler.getCall(1).args[0]).to.deep.equal({
-                type: "change", 
-                path: "Application.Collections.Users.1.type", 
                 relativePath: "1", 
                 fieldName: "type"
                 // value: XX ???
             });
-            expect(changeHandler.getCall(2).args[0]).to.deep.equal({
-                type: "change", 
-                path: "Application.Collections.Users.0.value",
-                relativePath: "0.value", 
-                fieldName: "value"
-                // value: XX ???
-            });
-            expect(changeHandler.getCall(3).args[0]).to.deep.equal({
+            expect(changeHandler.getCall(1).args[0]).to.deep.equal({
                 type: "change", 
                 path: "Application.Collections.Users.0.value", 
                 relativePath: "0", 
@@ -359,7 +320,7 @@ describe('Listeners tests', function () {
             
         });
 
-        xit('Генерация all при изменении вложенного объекта', function () {
+        it('Генерация all при изменении вложенного объекта', function () {
             var morph = new Morphine('Application.Session.User', {
                     login: 'Vasya',
                     pass: 'SecretPass',
@@ -378,7 +339,7 @@ describe('Listeners tests', function () {
             expect(changeHandler.getCall(0).args[0]).to.deep.equal({
                 type: "change", 
                 path: "Application.Session.User.login", 
-                relativePath: "Application.Session.User.login", 
+                relativePath: "Application.Session.User", 
                 fieldName: "login"
                 // oldValue: XX ???
                 // newValue: XX ???
@@ -428,7 +389,7 @@ describe('Listeners tests', function () {
             }); 
         });
 
-        xit('Генерация all при изменении элемента в коллекции', function () {
+        it('Генерация all при изменении элемента в коллекции', function () {
             var changeHandler = sinon.spy(),
                 morph = new Morphine();
             
@@ -441,7 +402,7 @@ describe('Listeners tests', function () {
             expect(changeHandler.getCall(0).args[0]).to.deep.equal({
                 type: "change", 
                 path: "Application.Collections.Users.0.login", 
-                relativePath: "Application.Collections.Users.0.login",
+                relativePath: "Application.Collections.Users.0",
                 fieldName: "login"
                 //value: ???
             });

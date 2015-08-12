@@ -491,10 +491,10 @@
                         if (this.length-1 != index) console.error("Несоответствие индекса созданного элемента ожидаемому индексу");
                     }
                 } else {
-                    eventType = typeof this[index] !== 'undefined' ? 'change' : 'add';
+                    isChange = typeof this[index] !== 'undefined';
+                    eventType = isChange ? 'change' : 'add';
                     this[index] = isMorphine(value) ? newObjectPrepare.call(this, value, index) : value;
-                    EventEmitter.call(this, eventType, currentLevel.join(CONFIG.separator), index);
-                    //--
+                    !isChange && EventEmitter.call(this, 'add', currentLevel.join(CONFIG.separator), index);
                     EventEmitter.call(this, 'change', currentLevel.slice(0, currentLevel.length-1).join(CONFIG.separator), index);
                 }
                 return;
