@@ -20,7 +20,7 @@
     <header>
       <div class="inner">
         <h1>Morphine</h1>
-        <h2>Extended JavaScript collections</h2>
+        <h2>Extended JavaScript collections and objects</h2>
         <a href="https://github.com/KlimMalgin/Morphine" class="button"><small>View project on</small> GitHub</a>
       </div>
     </header>
@@ -31,178 +31,36 @@
           <h1>
 <a id="morphine" class="anchor" href="#morphine" aria-hidden="true"><span class="octicon octicon-link"></span></a>Morphine</h1>
 
-<p>Extended JavaScript collections</p>
+<p>Extended JavaScript collections and objects</p>
 
 <h3>
-<a id="api" class="anchor" href="#api" aria-hidden="true"><span class="octicon octicon-link"></span></a>API</h3>
+<a id="docs" class="anchor" href="#docs" aria-hidden="true"><span class="octicon octicon-link"></span></a>Docs</h3>
 
-<blockquote>
-<p>{Morphine} config({Object} options) </p>
-</blockquote>
+<ul>
+<li><a href="https://github.com/KlimMalgin/Morphine/wiki/API">Morphine API methods</a></li>
+<li>
+<a href="https://github.com/KlimMalgin/Morphine/wiki/Examples">Examples</a>
 
-<p>Сконфигурирует morphine в текущей сессии. Сейчас доступна только одна опция separator, которая хранит символ-разделитель для парсинга и генерации path.<br>
-<strong>return</strong> Текущий объект</p>
+<ul>
+<li><a href="https://github.com/KlimMalgin/Morphine/wiki/Examples#create-morphine">Create Morphine</a></li>
+<li>
+<a href="https://github.com/KlimMalgin/Morphine/wiki/Examples#listeners">Listeners</a>
 
-<blockquote>
-<p>{Boolean} isObject() </p>
-</blockquote>
+<ul>
+<li><a href="https://github.com/KlimMalgin/Morphine/wiki/Examples#add-events">add</a></li>
+<li><a href="https://github.com/KlimMalgin/Morphine/wiki/Examples#change-events">change</a></li>
+<li><a href="https://github.com/KlimMalgin/Morphine/wiki/Examples#remove-events">remove</a></li>
+<li><a href="https://github.com/KlimMalgin/Morphine/wiki/Examples#all-events">all</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
 
-<p>Проверяет, является ли текущая сущность Morphine-объектом<br>
-<strong>return</strong> true|false</p>
+<h3>
+<a id="license" class="anchor" href="#license" aria-hidden="true"><span class="octicon octicon-link"></span></a>License</h3>
 
-<blockquote>
-<p>{Boolean} isArray() </p>
-</blockquote>
-
-<p>Проверяет, является ли текущая сущность Morphine-коллекцией<br>
-<strong>return</strong> true|false</p>
-
-<blockquote>
-<p>{Boolean} isNull({String} key) </p>
-</blockquote>
-
-<p>Проверит свойство key текущего объекта на null<br>
-<strong>return</strong> true|false</p>
-
-<blockquote>
-<p>{Boolean} isUndefined({String} key) </p>
-</blockquote>
-
-<p>Проверит, является ли свойство key - undefined<br>
-<strong>return</strong> true|false</p>
-
-<blockquote>
-<p>{Boolean} isEmpty() </p>
-</blockquote>
-
-<p>Проверит - является ли текущий объект пустым<br>
-<strong>return</strong> true|false</p>
-
-<blockquote>
-<p>{Boolean} has({String} path) </p>
-</blockquote>
-
-<p>Проверит наличие свойства path в текущем объекте или структуры соответствующей пути указанном в path<br>
-<strong>return</strong> true|false</p>
-
-<blockquote>
-<p>{Morphine} merge({Object} src) </p>
-</blockquote>
-
-<p>Выполнит merge src c текущим объектом<br>
-<strong>return</strong> Текущий объект, дополненный структурой из src</p>
-
-<blockquote>
-<p>{Morphine} set({String} path, {Any} value)<br>
-{Morphine} set({String} path) </p>
-</blockquote>
-
-<p>Установит свойство по указанному path. Value может быть любого типа и является опциональным. Если value не указано, то по пути path будет создан пустой объект.<br>
-<strong>return</strong> Текущий объект, дополненный структурой path: value</p>
-
-<blockquote>
-<p>{Any} get({String} path) </p>
-</blockquote>
-
-<p>Вернет значение по указанному path<br>
-<strong>return</strong> Значение по указанному path</p>
-
-<blockquote>
-<p>{String} stringify() </p>
-</blockquote>
-
-<p>Сериализует Morphine-объект в строку<br>
-<strong>return</strong> JSON-строка, представляющая текущий объект</p>
-
-<blockquote>
-<p>{Object} plain() </p>
-</blockquote>
-
-<p>Преобразует Morphine-объект в plain-объект<br>
-<strong>return</strong> plain-объект от текущего объекта</p>
-
-<blockquote>
-<p>{Array} toPaths() </p>
-</blockquote>
-
-<p>Преобразует текущий экземпляр объекта в массив path-элементов<br>
-<strong>return</strong> Массив path-элементов, соответствующий структуре текущего объекта</p>
-
-<blockquote>
-<p>{Morphine} remove({String} path) </p>
-</blockquote>
-
-<p>Удалит вложенный объект или значение по указанному path<br>
-<strong>return</strong> Текущий объект с удаленной path-ветвью</p>
-
-<blockquote>
-<p>{Morphine} clear() </p>
-</blockquote>
-
-<p>Очистит текущий экземпляр объекта<br>
-<strong>return</strong> Пустой morphine-объект</p>
-
-<blockquote>
-<p>{Morphine} buildFromPaths({Array} paths)   </p>
-</blockquote>
-
-<p>[not stable]<br>
-Преобразует текущий экземпляр объекта в объект описаный переданным массивом path-элементов.<br>
-<strong>return</strong> Текущий объект</p>
-
-<hr>
-
-<h1>
-<a id="examples" class="anchor" href="#examples" aria-hidden="true"><span class="octicon octicon-link"></span></a>Examples</h1>
-
-<h4>
-<a id="create-morphine" class="anchor" href="#create-morphine" aria-hidden="true"><span class="octicon octicon-link"></span></a>Create Morphine:</h4>
-
-<div class="highlight highlight-js"><pre><span class="pl-c">// Path only:</span>
-<span class="pl-k">var</span> m <span class="pl-k">=</span> <span class="pl-k">new</span> <span class="pl-en">Morphine</span>(<span class="pl-s"><span class="pl-pds">'</span>App.Collections.Users.$<span class="pl-pds">'</span></span>);
-<span class="pl-c">// result:</span>
-{
-    <span class="pl-s"><span class="pl-pds">"</span>App<span class="pl-pds">"</span></span><span class="pl-k">:</span>{
-        <span class="pl-s"><span class="pl-pds">"</span>Collections<span class="pl-pds">"</span></span><span class="pl-k">:</span>{
-            <span class="pl-s"><span class="pl-pds">"</span>Users<span class="pl-pds">"</span></span><span class="pl-k">:</span>[]
-        }
-    }
-}
-
-<span class="pl-c">// Path:object</span>
-<span class="pl-k">var</span> m <span class="pl-k">=</span> <span class="pl-k">new</span> <span class="pl-en">Morphine</span>(<span class="pl-s"><span class="pl-pds">'</span>App.SessionData<span class="pl-pds">'</span></span>, {
-    userName<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>Max<span class="pl-pds">'</span></span>,
-    age<span class="pl-k">:</span> <span class="pl-c1">22</span>,
-    phone<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>+1(234)567890<span class="pl-pds">'</span></span>
-});
-<span class="pl-c">// result:</span>
-{
-    <span class="pl-s"><span class="pl-pds">"</span>App<span class="pl-pds">"</span></span><span class="pl-k">:</span>{
-        <span class="pl-s"><span class="pl-pds">"</span>SessionData<span class="pl-pds">"</span></span><span class="pl-k">:</span>{
-            <span class="pl-s"><span class="pl-pds">"</span>userName<span class="pl-pds">"</span></span><span class="pl-k">:</span><span class="pl-s"><span class="pl-pds">"</span>Max<span class="pl-pds">"</span></span>,
-            <span class="pl-s"><span class="pl-pds">"</span>age<span class="pl-pds">"</span></span><span class="pl-k">:</span><span class="pl-c1">22</span>,
-            <span class="pl-s"><span class="pl-pds">"</span>phone<span class="pl-pds">"</span></span><span class="pl-k">:</span><span class="pl-s"><span class="pl-pds">"</span>+1(234)567890<span class="pl-pds">"</span></span>
-        }
-    }
-}
-
-<span class="pl-c">// Only object</span>
-<span class="pl-k">var</span> m <span class="pl-k">=</span> <span class="pl-k">new</span> <span class="pl-en">Morphine</span>({
-    userName<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>Max<span class="pl-pds">'</span></span>,
-    age<span class="pl-k">:</span> <span class="pl-c1">22</span>,
-    phone<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>+1(234)567890<span class="pl-pds">'</span></span>
-});
-<span class="pl-c">// result:</span>
-{
-    <span class="pl-s"><span class="pl-pds">"</span>userName<span class="pl-pds">"</span></span><span class="pl-k">:</span><span class="pl-s"><span class="pl-pds">"</span>Max<span class="pl-pds">"</span></span>,
-    <span class="pl-s"><span class="pl-pds">"</span>age<span class="pl-pds">"</span></span><span class="pl-k">:</span><span class="pl-c1">22</span>,
-    <span class="pl-s"><span class="pl-pds">"</span>phone<span class="pl-pds">"</span></span><span class="pl-k">:</span><span class="pl-s"><span class="pl-pds">"</span>+1(234)567890<span class="pl-pds">"</span></span>
-}
-
-<span class="pl-c">// Empty</span>
-<span class="pl-k">var</span> m <span class="pl-k">=</span> <span class="pl-k">new</span> <span class="pl-en">Morphine</span>();
-<span class="pl-c">// result:</span>
-{}</pre></div>
+<p>MIT</p>
         </section>
 
         <aside id="sidebar">
