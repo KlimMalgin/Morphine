@@ -1,7 +1,7 @@
 [![Build Status](https://travis-ci.org/KlimMalgin/Morphine.svg?branch=master)](https://travis-ci.org/KlimMalgin/Morphine)
 
 # Morphine
-Extended JavaScript collections and objects
+Enhanced JavaScript collections and objects
 
 ### Docs
 

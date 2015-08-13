@@ -2,7 +2,7 @@
   "name": "Morphine",
   "version": "0.0.9",
   "author": "Brunetkin Andrey <fxklim@gmail.com>",
-  "description": "Advanced JavaScript Objects and Arrays",
+  "description": "Enhanced JavaScript collections and objects",
   "url": "http://klimmalgin.github.io/Morphine/",
   "keywords": [
     "object",
@@ -11,7 +11,7 @@
     "collection",
     "morphine"
   ],
-  "main": "Morphine.js",
+  "main": "build/Morphine.js",
   "devDependencies": {
     "chai": "^3.1.0",
     "deamdify": "^0.1.1",
