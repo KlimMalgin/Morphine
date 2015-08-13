@@ -9,3 +9,10 @@ Extended JavaScript collections and objects
 * [Examples](https://github.com/KlimMalgin/Morphine/wiki/Examples)
   * [Create Morphine](https://github.com/KlimMalgin/Morphine/wiki/Examples#create-morphine)
   * [Listeners](https://github.com/KlimMalgin/Morphine/wiki/Examples#listeners)
+    * [add](https://github.com/KlimMalgin/Morphine/wiki/Examples#add-events)
+    * [change](https://github.com/KlimMalgin/Morphine/wiki/Examples#change-events)
+    * [remove](https://github.com/KlimMalgin/Morphine/wiki/Examples#remove-events)
+    * [all](https://github.com/KlimMalgin/Morphine/wiki/Examples#all-events)
+
+### License
+MIT
