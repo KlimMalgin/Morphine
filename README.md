@@ -3,6 +3,12 @@
 # Morphine
 Enhanced JavaScript collections and objects
 
+### Install
+
+```js
+npm install morphine.js --save
+```
+
 ### Docs
 
 * [Morphine API methods](https://github.com/KlimMalgin/Morphine/wiki/API)

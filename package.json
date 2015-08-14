@@ -1,7 +1,7 @@
 {
-  "name": "morphine",
+  "name": "morphine.js",
   "version": "0.1.0",
-  "author": "Brunetkin Andrey <fxklim@gmail.com>",
+  "author": "KlimMalgin <fxklim@gmail.com>",
   "description": "Enhanced JavaScript collections and objects",
   "url": "http://klimmalgin.github.io/Morphine/",
   "keywords": [
