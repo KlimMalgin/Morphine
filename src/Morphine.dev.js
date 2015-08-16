@@ -846,6 +846,7 @@
 
     function replaceGlobal () {
         global.Morphine = Morphine;
+        if (module) module.exports = Morphine;
         return Morphine;
     }
 
