@@ -42,7 +42,7 @@
     MorphineArray.prototype = new MorphineArray();
     MorphineArray.prototype.constructor = MorphineArray;*/
     
-    Morphine.prototype.version = '0.1.0';
+    //Morphine.prototype.version = '0.1.1';
 
     function MorphineCreator (bubbler) {
     	var f = function () {},
