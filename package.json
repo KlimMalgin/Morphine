@@ -5,6 +5,12 @@
   "description": "Enhanced JavaScript collections and objects for browser and node environment",
   "url": "http://klimmalgin.github.io/Morphine/",
   "keywords": [
+    "field",
+    "generate",
+    "path",
+    "event",
+    "change",
+    "handler",
     "object",
     "array",
     "model",
