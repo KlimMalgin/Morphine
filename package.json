@@ -1,6 +1,6 @@
 {
   "name": "morphine.js",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "author": "KlimMalgin <fxklim@gmail.com>",
   "description": "Enhanced JavaScript collections and objects for browser and node environment",
   "url": "http://klimmalgin.github.io/Morphine/",
