@@ -194,28 +194,45 @@ describe('Public API tests', function () {
         
     });
     
-    it('plain', function () {
-        var source = {
-            root: {
-                level1_test: false,
-                arr: [
-                    {
-                        val1: 'v1',
-                        val2: 'v2',
-                    },
-                    {
-                        bool: true
-                    },
-                    {
-                        num: 44
-                    }
-                ]
-            }
-        };
-        var morph = new Morphine(source);
-        var morphPlain = morph.plain();
+    describe('plain', function () {
+
+        it('plain for filled object', function () {
+            var source = {
+                root: {
+                    level1_test: false,
+                    arr: [
+                        {
+                            val1: 'v1',
+                            val2: 'v2',
+                        },
+                        {
+                            bool: true
+                        },
+                        {
+                            num: 44
+                        }
+                    ]
+                }
+            };
+            var morph = new Morphine(source);
+            var morphPlain = morph.plain();
+            
+            assert.deepEqual(morphPlain, source, "Преобразование в Morphine и обратно прошло успешно");
+            
+        });
         
-        assert.deepEqual(morphPlain, source, "Преобразование в Morphine и обратно прошло успешно");
+        it('plain for object with null fields', function() {
+            var src = {
+                name: "Some name",
+                params: {},
+                subject: null,
+                type: "news"
+            };
+            var morph = new Morphine(src);
+            var morphPlain = morph.plain();
+            
+            assert.deepEqual(morphPlain, src, "Преобразование в Morphine и обратно прошло успешно");
+        });
         
     });
     
