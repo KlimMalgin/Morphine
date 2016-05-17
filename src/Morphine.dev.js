@@ -745,11 +745,11 @@
             for (var key in obj) {
                 if (!obj.has(key)) continue;
                 item += "\"" + key + "\":";
-                if (obj[key].isObject && obj[key].isObject()) {
+                if (obj[key] && obj[key].isObject && obj[key].isObject()) {
                     item += ObjectToString.call(obj[key]);
                 } else
                 // TODO: Bug. Метод isArray() не доступен в прототипе.
-                if ((obj[key].isArray && obj[key].isArray()) || obj[key].constructor === Array) {
+                if (obj[key] && ((obj[key].isArray && obj[key].isArray()) || obj[key].constructor === Array)) {
                     item += ArrayToString.call(obj[key]);
                 } else
                 if (checkType(obj[key])) {
